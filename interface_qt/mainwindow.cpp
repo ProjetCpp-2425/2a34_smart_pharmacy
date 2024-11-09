@@ -22,24 +22,25 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->tableView_2->setModel(Etmp.afficher());
     ui->tableView_2->resizeColumnsToContents();
-    QPixmap pix("C:/Users/USER/Desktop/khidma inter/interface_qt/img/Nouveau dossier/aze.png");
+    QPixmap pix("C:/projetcpp/interface_qt/img/Nouveau dossier/aze.png");
     ui->pic1->setPixmap(pix);
     ui->pic1_2->setPixmap(pix);
-    QPixmap pix2("C:/Users/USER/Desktop/khidma inter/interface_qt/img/Nouveau dossier/stt.png");
+    ui->pic1_4->setPixmap(pix);
+    QPixmap pix2("C:/projetcpp/interface_qt/img/Nouveau dossier/stt.png");
        ui->label_64->setPixmap(pix2);
-    QPixmap pix3("C:/Users/USER/Desktop/khidma inter/interface_qt/img/Nouveau dossier/avc.png");
+    QPixmap pix3("C:/projetcpp/interface_qt/img/Nouveau dossier/avc.png");
         ui->label_71->setPixmap(pix3);
-    QPixmap pix4("C:/Users/USER/Desktop/khidma inter/interface_qt/img/Nouveau dossier/stat.png");
+    QPixmap pix4("C:/projetcpp/interface_qt/img/Nouveau dossier/stat.png");
          ui->label_30->setPixmap(pix4);
-    QPixmap pix5("C:/Users/USER/Desktop/khidma inter/interface_qt/img/Nouveau dossier/stat.png");
+    QPixmap pix5("C:/projetcpp/interface_qt/img/Nouveau dossier/stat.png");
          ui->label_3->setPixmap(pix5);
-    QPixmap pix6("C:/Users/USER/Desktop/khidma inter/interface_qt/img/Nouveau dossier/mariem.jpeg");
+    QPixmap pix6("C:/projetcpp/interface_qt/img/Nouveau dossier/mariem.jpeg");
          ui->label_56->setPixmap(pix6);
-    QPixmap pix7("C:/Users/USER/Desktop/khidma inter/interface_qt/img/Nouveau dossier/mariem1.jpeg");
+    QPixmap pix7("C:/projetcpp/interface_qt/img/Nouveau dossier/mariem1.jpeg");
          ui->label_62->setPixmap(pix7);
-    QPixmap pix8("C:/Users/USER/Desktop/khidma inter/interface_qt/img/Nouveau dossier/siwar.jpeg");
+    QPixmap pix8("C:/projetcpp/interface_qt/img/Nouveau dossier/siwar.jpeg");
          ui->label_35->setPixmap(pix8);
-         QPixmap pix9("C:/Users/USER/Desktop/khidma inter/interface_qt/img/Nouveau dossier/hazem.jpeg");
+         QPixmap pix9("C:/projetcpp/interface_qt/img/Nouveau dossier/hazem.jpeg");
               ui->label_34->setPixmap(pix9);
 
 

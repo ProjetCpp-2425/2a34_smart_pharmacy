@@ -493,7 +493,7 @@ QTableWidget::item {
 </string>
             </property>
             <property name="currentIndex">
-             <number>10</number>
+             <number>4</number>
             </property>
             <widget class="QWidget" name="a9">
              <widget class="QLabel" name="label_35">
@@ -1577,7 +1577,7 @@ QPushButton#pushButton_22:pressed{
               </property>
               <property name="icon">
                <iconset theme="QIcon::ThemeIcon::FormatJustifyRight">
-                <normaloff>../../../Downloads</normaloff>../../../Downloads</iconset>
+                <normaloff>../../Downloads</normaloff>../../Downloads</iconset>
               </property>
              </widget>
              <widget class="QLabel" name="label_47">
@@ -1677,7 +1677,7 @@ QPushButton#pushButton_22:pressed{
               </property>
               <property name="icon">
                <iconset theme="QIcon::ThemeIcon::DocumentPrintPreview">
-                <normaloff>../../../Downloads</normaloff>../../../Downloads</iconset>
+                <normaloff>../../Downloads</normaloff>../../Downloads</iconset>
               </property>
              </widget>
              <widget class="QFrame" name="frame_13">
