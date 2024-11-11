@@ -1,4 +1,4 @@
-QT       += core gui \
+QT       += core gui charts\
     quick
 QT       += core gui sql
 QT += sql

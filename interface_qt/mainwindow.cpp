@@ -1,6 +1,7 @@
 #include "ordonnance.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QMap>
 #include <QPixmap>
 #include <QFileDialog>
 #include <QByteArray>
@@ -12,6 +13,22 @@
 #include <QDate>
 #include <QString>
 #include <QRegularExpression>
+
+#include <QFrame>
+#include <QHBoxLayout>  // For horizontal layout
+
+#include <QMessageBox>
+#include <QVector>
+#include <algorithm>
+
+#include <QMap>
+
+#include <QtCharts/QPieSeries>
+#include <QtCharts/QChartView>
+#include <QtCharts/QBarSet>
+#include <QtCharts/QBarSeries>
+#include <QtCharts/QBarCategoryAxis>
+#include <QtCharts/QValueAxis>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -41,7 +58,6 @@ MainWindow::MainWindow(QWidget *parent)
     QPixmap pix8("C:/projetcpp/interface_qt/img/Nouveau dossier/siwar.jpeg");
          ui->label_35->setPixmap(pix8);
          QPixmap pix9("C:/projetcpp/interface_qt/img/Nouveau dossier/hazem.jpeg");
-              ui->label_34->setPixmap(pix9);
 
 
     // Initialize the stacked widget
@@ -64,10 +80,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton_24, &QPushButton::clicked, this, &MainWindow::on_pushButton_24_clicked);
     connect(ui->updateButton, &QPushButton::clicked, this, &::MainWindow::on_updateButton_clicked);
     connect(ui->update2Button, &QPushButton::clicked, this, &::MainWindow::on_update2Button_clicked);
+    connect(ui->aa33, &QPushButton::clicked, this, &::MainWindow::on_aa33_clicked);
+    connect(ui->aa44, &QPushButton::clicked, this, &::MainWindow::on_aa44_clicked);
+
 
         /*ui->setupUi(this);
         ui->tableView_2->setModel(Etmp.afficher());
         ui->tableView_2->resizeColumnsToContents();*/
+    // In MainWindow constructor
+    proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setSourceModel(ui->tableView_2->model());  // Assuming model is already set for tableView_2
+    proxyModel->setFilterKeyColumn(1);  // Column 2 (0-based index) where CIN values are located
+    ui->tableView_2->setModel(proxyModel);
+
+
+    showStatistics();
 
 }
 
@@ -122,6 +149,7 @@ void MainWindow::on_pushButton_24_clicked() {
 
 void MainWindow::on_addbutton1_clicked()
 {
+    proxyModel->sort(6, Qt::DescendingOrder);
     // Récupération des informations saisies dans les 3 champs
     QString statu = ui->comboBox_2->currentText();
     QString nom=ui->lineEdit_nom->text().trimmed();
@@ -160,10 +188,10 @@ void MainWindow::on_addbutton1_clicked()
             QMessageBox::warning(nullptr, "Input Error", "Please enter a valid 8-digit phone number.");
             return;
         }
-    if (cin < 10000000 || cin > 99999999) {
+    /*if (cin < 10000000 || cin > 99999999) {
             QMessageBox::warning(nullptr, "Input Error", "Please enter a valid 8-digit ID number.");
             return;
-        }
+        }*/
     if (ord < 10000 || ord > 99999) {
             QMessageBox::warning(nullptr, "Input Error", "Please enter a valid 5-digit Prescription number.");
             return;
@@ -179,6 +207,7 @@ void MainWindow::on_addbutton1_clicked()
         ui->tableView_2->setModel(Etmp.afficher());
         QMessageBox::information(nullptr, QObject::tr("OK"),
                                  QObject::tr("Ajout effectué\n""Click Cancel to exit."), QMessageBox::Cancel);
+        showStatistics();
         return;
     }
     else // Si requête non exécutée => QMessageBox::critical
@@ -187,6 +216,7 @@ void MainWindow::on_addbutton1_clicked()
                               QObject::tr("Ajout non effectué.\n""Click Cancel to exit."), QMessageBox::Cancel);
         return;
     }
+
 }
 /*MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -214,6 +244,7 @@ void MainWindow::on_deletebutton1_clicked()
         ui->tableView_2->setModel(Etmp.afficher());
         QMessageBox::information(nullptr, QObject::tr("Success"),
                                  QObject::tr("Record deleted successfully."));
+        showStatistics();
     } else {
         // Display an error message if deletion fails
         QMessageBox::critical(nullptr, QObject::tr("Error"),
@@ -283,6 +314,7 @@ void MainWindow::on_updateButton_clicked() {
 
 
             return;  // Exit the function once data is successfully fetched
+
         }
 
 }
@@ -424,6 +456,7 @@ void MainWindow::on_update2Button_clicked()
 
     if (test) {
         ui->tableView_2->setModel(Etmp.afficher());
+        showStatistics();
         QMessageBox::information(nullptr, QObject::tr("Update Successful"),
                                  QObject::tr("The record has been successfully updated.\nClick Cancel to exit."),
                                  QMessageBox::Cancel);messageShown = true;
@@ -441,3 +474,243 @@ void MainWindow::on_update2Button_clicked()
     ui->setupUi(this);
     ui->tableWidget_2->setModel(Etmp.afficher());
 }*/
+/*void MainWindow::on_aa33_clicked() {
+    QString inputCin = ui->lineEdit->text();  // Get CIN from lineEdit
+
+    // Access the model directly from the table view
+    QAbstractItemModel *model = ui->tableView_2->model();
+
+    if (!model) {
+        QMessageBox::critical(this, "Error", "No model found for tableView_2.");
+        return;
+    }
+
+    // Check if input is empty; if so, show all rows and return
+    if (inputCin.isEmpty()) {
+        for (int row = 0; row < model->rowCount(); ++row) {
+            ui->tableView_2->setRowHidden(row, false);  // Unhide all rows
+        }
+        return;
+    }
+
+    // Loop through each row and check the CIN value in column 2
+    for (int row = 0; row < model->rowCount(); ++row) {
+        QModelIndex index = model->index(row, 1);  // Column 2 (0-based index 1) for CIN values
+        QString cinValue = model->data(index).toString();
+
+        // Check if the CIN matches the input; hide the row if it doesn’t match
+        ui->tableView_2->setRowHidden(row, cinValue != inputCin);
+    }
+}*/
+
+void MainWindow::on_aa33_clicked() {
+    QString inputCin = ui->lineEdit->text();  // Get CIN from lineEdit
+
+    // Access the model directly from the table view
+    QAbstractItemModel *model = ui->tableView_2->model();
+
+    if (!model) {
+        QMessageBox::critical(this, "Error", "Empty Database.");
+        return;
+    }
+
+    // Check if input is empty; if so, show all rows and return
+    if (inputCin.isEmpty()) {
+        for (int row = 0; row < model->rowCount(); ++row) {
+            ui->tableView_2->setRowHidden(row, false);  // Unhide all rows
+        }
+        QMessageBox::information(this, "Empty Search", "The search box is empty. Please enter a value to search.");
+
+        return;
+    }
+
+    bool anyMatchFound = false;  // Flag to check if any match was found
+
+    // Loop through each row and check the CIN, PRENOM, and NUMERO_TELEPHONE values
+    for (int row = 0; row < model->rowCount(); ++row) {
+        bool matchFound = false;
+
+        // Check CIN in column 2
+        QModelIndex cinIndex = model->index(row, 1);
+        QString cinValue = model->data(cinIndex).toString();
+        if (cinValue == inputCin) {
+            matchFound = true;
+        }
+
+        // Check PRENOM in column 3
+        QModelIndex prenomIndex = model->index(row, 2);
+        QString prenomValue = model->data(prenomIndex).toString();
+        if (prenomValue == inputCin) {
+            matchFound = true;
+        }
+
+        // Check NUMERO_TELEPHONE in column 5
+        QModelIndex numeroTelephoneIndex = model->index(row, 4);
+        QString numeroTelephoneValue = model->data(numeroTelephoneIndex).toString();
+        if (numeroTelephoneValue == inputCin) {
+            matchFound = true;
+        }
+
+        // Show or hide the row based on matchFound
+        ui->tableView_2->setRowHidden(row, !matchFound);
+
+        // If any match is found, set anyMatchFound to true
+        if (matchFound) {
+            anyMatchFound = true;
+        }
+    }
+
+    // Display a message if no matches were found
+    if (!anyMatchFound) {
+        QMessageBox::information(this, "No Matches", "No records found matching the entered value.");
+    }
+}
+
+void MainWindow::on_aa44_clicked() {
+    QString selectedValue = ui->comboBox4->currentText();  // Get the selected value from comboBox4
+
+    // Access the model directly from the table view
+    QAbstractItemModel *model = ui->tableView_2->model();
+
+    if (!model) {
+        QMessageBox::critical(this, "Error", "No model found for tableView_2.");
+        return;
+    }
+
+    // Create a QSortFilterProxyModel for sorting
+    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setSourceModel(model);
+
+    // Determine which column to sort based on the selected comboBox4 value
+    if (selectedValue == "STATUS") {
+        proxyModel->sort(6, Qt::AscendingOrder);  // Sort column 7 (0-based index 6) alphabetically in ascending order
+    }
+    else if (selectedValue == "PRESCRIPTION DATE") {
+        proxyModel->sort(5, Qt::DescendingOrder);  // Sort column 6 (0-based index 5) by date, latest to farthest
+    }
+    else if (selectedValue == "MEDECINE") {
+        proxyModel->sort(7, Qt::AscendingOrder);  // Sort column 8 (0-based index 7) alphabetically in ascending order
+    }
+
+    // Set the proxy model to the table view
+    ui->tableView_2->setModel(proxyModel);
+}
+
+//----------------STATS----------------------------------------------------------
+
+
+
+void MainWindow::showStatistics() {
+    // Ensure there's a model to work with
+    QAbstractItemModel *model = ui->tableView_2->model();
+
+    if (!model) {
+        QMessageBox::critical(this, "Error", "No model found for tableView_2.");
+        return;
+    }
+
+    // Prepare data structures
+    QMap<QString, int> statusCount;
+    QMap<QString, int> medicineCount;
+
+    // Populate the counts
+    for (int row = 0; row < model->rowCount(); ++row) {
+        // Count prescriptions by status
+        QString status = model->data(model->index(row, 6)).toString();
+        statusCount[status]++;
+
+        // Count medicines
+        QStringList medicines = model->data(model->index(row, 7)).toString().split(" ");
+        for (const QString &medicine : medicines) {
+            medicineCount[medicine]++;
+        }
+    }
+
+    // Convert medicineCount to a list of pairs for sorting
+    QVector<QPair<QString, int>> sortedMedicines;
+    for (auto it = medicineCount.begin(); it != medicineCount.end(); ++it) {
+        sortedMedicines.append(qMakePair(it.key(), it.value()));
+    }
+
+    // Sort by frequency (descending)
+    std::sort(sortedMedicines.begin(), sortedMedicines.end(), [](const QPair<QString, int> &a, const QPair<QString, int> &b) {
+        return a.second > b.second;
+    });
+
+    // Prepare top medicines for the chart
+    QStringList topMedicines;
+    QVector<int> topCounts;
+    for (int i = 0; i < 3 && i < sortedMedicines.size(); ++i) {
+        topMedicines << sortedMedicines[i].first;
+        topCounts << sortedMedicines[i].second;
+    }
+
+    // Debugging: Print the top 3 medicines and counts
+    qDebug() << "Top Medicines: " << topMedicines;
+    qDebug() << "Top Counts: " << topCounts;
+
+    // Clear existing stats in frame66
+    if (ui->frame66->layout() != nullptr) {
+        QLayoutItem *child;
+        while ((child = ui->frame66->layout()->takeAt(0)) != nullptr) {
+            delete child->widget();  // Remove and delete widgets
+            delete child;            // Also delete the layout item
+        }
+        delete ui->frame66->layout();
+    }
+
+    // Create the pie chart for "Prescriptions by Status"
+    QPieSeries *statusSeries = new QPieSeries();
+    for (auto it = statusCount.begin(); it != statusCount.end(); ++it) {
+        statusSeries->append(it.key(), it.value());
+    }
+
+    QChart *statusChart = new QChart();
+    statusChart->addSeries(statusSeries);
+    statusChart->setTitle("Prescriptions by Status");
+
+    QChartView *statusChartView = new QChartView(statusChart);
+    statusChartView->setRenderHint(QPainter::Antialiasing);
+
+    // Create the bar chart for "Top 3 Medicine Occurrences"
+    QBarSet *medicineSet = new QBarSet("Medicine Name");
+    for (int count : topCounts) {
+        *medicineSet << count;
+    }
+
+    QBarSeries *medicineSeries = new QBarSeries();
+    medicineSeries->append(medicineSet);
+
+    QChart *medicineChart = new QChart();
+    medicineChart->addSeries(medicineSeries);
+    medicineChart->setTitle("Top 3 Medicines sold");
+    medicineChart->setAnimationOptions(QChart::SeriesAnimations);
+
+    QBarCategoryAxis *axisX = new QBarCategoryAxis();
+    axisX->append(topMedicines);
+    medicineChart->addAxis(axisX, Qt::AlignBottom);
+    medicineSeries->attachAxis(axisX);
+
+    QValueAxis *axisY = new QValueAxis();
+    axisY->setRange(0, topCounts.isEmpty() ? 0 : topCounts[0]);
+    medicineChart->addAxis(axisY, Qt::AlignLeft);
+    medicineSeries->attachAxis(axisY);
+
+    QChartView *medicineChartView = new QChartView(medicineChart);
+    medicineChartView->setRenderHint(QPainter::Antialiasing);
+
+    // Debugging: Verify that the charts are created
+    qDebug() << "Charts created: Pie chart and Bar chart.";
+
+    // Add the charts to frame66's layout
+    QHBoxLayout *statsLayout = new QHBoxLayout();
+    statsLayout->addWidget(statusChartView);
+    statsLayout->addWidget(medicineChartView);
+
+    ui->frame66->setLayout(statsLayout);
+
+    // Debugging: Confirm the layout is set
+    qDebug() << "Layout set in frame66.";
+}
+
+

@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QApplication>
+#include <QMap>
 
 int main(int argc, char *argv[])
 {

@@ -2,8 +2,11 @@
 #define MAINWINDOW_H
 #include "ordonnance.h"
 #include <QStackedWidget>
-
+#include <QSortFilterProxyModel>
 #include <QMainWindow>
+#include <QMap>
+
+#include <QFrame>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,6 +17,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -25,6 +29,7 @@ private:
     QString originalNom, originalPrenom, originalStatu, originalMed;
         QDate originalDate_ord;
         int originalCin, originalTel,originalord;
+    QSortFilterProxyModel *proxyModel;
 
 
 
@@ -44,6 +49,10 @@ private slots:
     void on_deletebutton1_clicked();
     void on_updateButton_clicked();
     void on_update2Button_clicked();
+    void on_aa33_clicked();
+    void on_aa44_clicked();
+    void showStatistics();
+
 private:
     QStackedWidget *stackedWidget;
 
