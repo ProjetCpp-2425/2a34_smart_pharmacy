@@ -206,6 +206,8 @@ public:
     QLabel *label_56;
     QLabel *label_62;
     QLabel *label_74;
+    QPushButton *pushButton_statpiechart;
+    QPushButton *pushButton_stathistogramme;
     QWidget *a3;
     QFrame *frame_5;
     QPushButton *pushButton_22;
@@ -260,21 +262,26 @@ public:
     QDateEdit *dateEdit_date;
     QLabel *label_38;
     QLabel *label_24;
-    QPushButton *add_5;
+    QPushButton *modif_trans;
     QLineEdit *lineEdit_idtrans;
     QLabel *label_63;
     QLineEdit *lineEdit_type;
     QFrame *frame_16;
     QLabel *label_32;
     QLabel *label_31;
-    QComboBox *comboBox_5;
-    QPushButton *pushButton_5;
-    QLineEdit *edit_4;
+    QComboBox *comboBox_triertrans;
+    QPushButton *pushButton_donesearch;
+    QLineEdit *edit_search;
     QLineEdit *edit_iddelete;
     QLabel *label_49;
     QPushButton *pushButton_delete;
-    QPushButton *pushButton_33;
+    QPushButton *pushButton_exporterpdf;
     QTableView *tableView;
+    QPushButton *pushButton_SMS;
+    QLineEdit *lineEdit_category_2;
+    QLineEdit *lineEdit_category_3;
+    QLabel *label_76;
+    QLabel *label_77;
     QLabel *pic1_4;
     QWidget *icon_names_text_widget;
     QVBoxLayout *verticalLayout_16;
@@ -1930,16 +1937,62 @@ public:
         page->setObjectName(QString::fromUtf8("page"));
         label_56 = new QLabel(page);
         label_56->setObjectName(QString::fromUtf8("label_56"));
-        label_56->setGeometry(QRect(-10, 300, 631, 481));
+        label_56->setGeometry(QRect(170, 340, 351, 251));
         label_56->setPixmap(QPixmap(QString::fromUtf8("img/Nouveau dossier/mariem.jpeg")));
         label_62 = new QLabel(page);
         label_62->setObjectName(QString::fromUtf8("label_62"));
-        label_62->setGeometry(QRect(630, 410, 521, 371));
+        label_62->setGeometry(QRect(510, 420, 531, 291));
         label_62->setPixmap(QPixmap(QString::fromUtf8("img/Nouveau dossier/mariem1.jpeg")));
         label_74 = new QLabel(page);
         label_74->setObjectName(QString::fromUtf8("label_74"));
         label_74->setGeometry(QRect(100, 160, 281, 91));
         label_74->setFont(font2);
+        pushButton_statpiechart = new QPushButton(page);
+        pushButton_statpiechart->setObjectName(QString::fromUtf8("pushButton_statpiechart"));
+        pushButton_statpiechart->setGeometry(QRect(190, 260, 311, 61));
+        pushButton_statpiechart->setStyleSheet(QString::fromUtf8("\n"
+"#pushButton_21{\n"
+"color: rgb(0, 0, 0);\n"
+"}\n"
+"QPushButton, #pushButton_21{\n"
+"	background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(11, 131, 120, 219), stop:1 rgba(85, 98, 112, 226));\n"
+"	color:rgba(255, 255, 255, 210);\n"
+"	border-radius:5px;\n"
+"}\n"
+"\n"
+"QPushButton#pushButton_21:hover{\n"
+"	background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(150, 123, 111, 219), stop:1 rgba(85, 81, 84, 226));\n"
+"}\n"
+"\n"
+"QPushButton#pushButton_21:pressed{\n"
+"	padding-left:5px;\n"
+"	padding-top:5px;\n"
+"	background-color:rgba(150, 123, 111, 255);\n"
+"}\n"
+""));
+        pushButton_stathistogramme = new QPushButton(page);
+        pushButton_stathistogramme->setObjectName(QString::fromUtf8("pushButton_stathistogramme"));
+        pushButton_stathistogramme->setGeometry(QRect(620, 260, 301, 61));
+        pushButton_stathistogramme->setStyleSheet(QString::fromUtf8("\n"
+"#pushButton_21{\n"
+"color: rgb(0, 0, 0);\n"
+"}\n"
+"QPushButton, #pushButton_21{\n"
+"	background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(11, 131, 120, 219), stop:1 rgba(85, 98, 112, 226));\n"
+"	color:rgba(255, 255, 255, 210);\n"
+"	border-radius:5px;\n"
+"}\n"
+"\n"
+"QPushButton#pushButton_21:hover{\n"
+"	background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(150, 123, 111, 219), stop:1 rgba(85, 81, 84, 226));\n"
+"}\n"
+"\n"
+"QPushButton#pushButton_21:pressed{\n"
+"	padding-left:5px;\n"
+"	padding-top:5px;\n"
+"	background-color:rgba(150, 123, 111, 255);\n"
+"}\n"
+""));
         stackedWidget->addWidget(page);
         a3 = new QWidget();
         a3->setObjectName(QString::fromUtf8("a3"));
@@ -2518,10 +2571,10 @@ public:
         label_24->setFont(font6);
         label_24->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);\n"
 "background-color: rgb(160, 255, 228);"));
-        add_5 = new QPushButton(frame_15);
-        add_5->setObjectName(QString::fromUtf8("add_5"));
-        add_5->setGeometry(QRect(30, 510, 83, 41));
-        add_5->setStyleSheet(QString::fromUtf8("\n"
+        modif_trans = new QPushButton(frame_15);
+        modif_trans->setObjectName(QString::fromUtf8("modif_trans"));
+        modif_trans->setGeometry(QRect(30, 510, 83, 41));
+        modif_trans->setStyleSheet(QString::fromUtf8("\n"
 "#pushButton_21{\n"
 "color: rgb(0, 0, 0);\n"
 "}\n"
@@ -2541,7 +2594,7 @@ public:
 "	background-color:rgba(150, 123, 111, 255);\n"
 "}\n"
 ""));
-        add_5->setCheckable(true);
+        modif_trans->setCheckable(true);
         lineEdit_idtrans = new QLineEdit(frame_15);
         lineEdit_idtrans->setObjectName(QString::fromUtf8("lineEdit_idtrans"));
         lineEdit_idtrans->setGeometry(QRect(110, 130, 161, 28));
@@ -2573,17 +2626,17 @@ public:
         label_31->setObjectName(QString::fromUtf8("label_31"));
         label_31->setGeometry(QRect(10, 29, 151, 31));
         label_31->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
-        comboBox_5 = new QComboBox(frame_16);
-        comboBox_5->addItem(QString());
-        comboBox_5->addItem(QString());
-        comboBox_5->addItem(QString());
-        comboBox_5->setObjectName(QString::fromUtf8("comboBox_5"));
-        comboBox_5->setGeometry(QRect(540, 30, 121, 28));
-        comboBox_5->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
-        pushButton_5 = new QPushButton(frame_16);
-        pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
-        pushButton_5->setGeometry(QRect(322, 18, 71, 41));
-        pushButton_5->setStyleSheet(QString::fromUtf8("QPushButton, #pushButton_4 {\n"
+        comboBox_triertrans = new QComboBox(frame_16);
+        comboBox_triertrans->addItem(QString());
+        comboBox_triertrans->addItem(QString());
+        comboBox_triertrans->addItem(QString());
+        comboBox_triertrans->setObjectName(QString::fromUtf8("comboBox_triertrans"));
+        comboBox_triertrans->setGeometry(QRect(540, 30, 121, 28));
+        comboBox_triertrans->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
+        pushButton_donesearch = new QPushButton(frame_16);
+        pushButton_donesearch->setObjectName(QString::fromUtf8("pushButton_donesearch"));
+        pushButton_donesearch->setGeometry(QRect(322, 18, 71, 41));
+        pushButton_donesearch->setStyleSheet(QString::fromUtf8("QPushButton, #pushButton_4 {\n"
 "    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, \n"
 "        stop:0 rgba(11, 131, 120, 219), stop:1 rgba(85, 98, 112, 226));\n"
 "    color: rgba(255, 255, 255, 210);\n"
@@ -2606,11 +2659,11 @@ public:
 "\n"
 "\n"
 "color: rgb(0, 0, 0);"));
-        edit_4 = new QLineEdit(frame_16);
-        edit_4->setObjectName(QString::fromUtf8("edit_4"));
-        edit_4->setGeometry(QRect(160, 30, 141, 31));
-        edit_4->setMinimumSize(QSize(0, 31));
-        edit_4->setStyleSheet(QString::fromUtf8("QLineEdit{\n"
+        edit_search = new QLineEdit(frame_16);
+        edit_search->setObjectName(QString::fromUtf8("edit_search"));
+        edit_search->setGeometry(QRect(160, 30, 141, 31));
+        edit_search->setMinimumSize(QSize(0, 31));
+        edit_search->setStyleSheet(QString::fromUtf8("QLineEdit{\n"
 "	padding-left: 20px;\n"
 "	border: 1px solid gray;	\n"
 "	border-radius: 10px;\n"
@@ -2620,7 +2673,7 @@ public:
 ""));
         edit_iddelete = new QLineEdit(frame_16);
         edit_iddelete->setObjectName(QString::fromUtf8("edit_iddelete"));
-        edit_iddelete->setGeometry(QRect(370, 520, 141, 31));
+        edit_iddelete->setGeometry(QRect(180, 450, 141, 31));
         edit_iddelete->setMinimumSize(QSize(0, 31));
         edit_iddelete->setStyleSheet(QString::fromUtf8("QLineEdit{\n"
 "	padding-left: 20px;\n"
@@ -2632,11 +2685,11 @@ public:
 ""));
         label_49 = new QLabel(frame_16);
         label_49->setObjectName(QString::fromUtf8("label_49"));
-        label_49->setGeometry(QRect(220, 510, 31, 41));
+        label_49->setGeometry(QRect(230, 510, 31, 41));
         label_49->setPixmap(QPixmap(QString::fromUtf8(":/img/img/download.svg")));
         pushButton_delete = new QPushButton(frame_16);
         pushButton_delete->setObjectName(QString::fromUtf8("pushButton_delete"));
-        pushButton_delete->setGeometry(QRect(520, 500, 151, 61));
+        pushButton_delete->setGeometry(QRect(20, 430, 151, 61));
         pushButton_delete->setStyleSheet(QString::fromUtf8("\n"
 "#pushButton_21{\n"
 "color: rgb(0, 0, 0);\n"
@@ -2657,10 +2710,10 @@ public:
 "	background-color:rgba(150, 123, 111, 255);\n"
 "}\n"
 ""));
-        pushButton_33 = new QPushButton(frame_16);
-        pushButton_33->setObjectName(QString::fromUtf8("pushButton_33"));
-        pushButton_33->setGeometry(QRect(60, 500, 141, 61));
-        pushButton_33->setStyleSheet(QString::fromUtf8("\n"
+        pushButton_exporterpdf = new QPushButton(frame_16);
+        pushButton_exporterpdf->setObjectName(QString::fromUtf8("pushButton_exporterpdf"));
+        pushButton_exporterpdf->setGeometry(QRect(30, 500, 141, 61));
+        pushButton_exporterpdf->setStyleSheet(QString::fromUtf8("\n"
 "#pushButton_21{\n"
 "color: rgb(0, 0, 0);\n"
 "}\n"
@@ -2685,6 +2738,47 @@ public:
         tableView->setGeometry(QRect(25, 91, 681, 281));
         tableView->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);\n"
 "font: 700 italic 10pt \"Segoe UI\";"));
+        pushButton_SMS = new QPushButton(frame_16);
+        pushButton_SMS->setObjectName(QString::fromUtf8("pushButton_SMS"));
+        pushButton_SMS->setGeometry(QRect(500, 360, 151, 61));
+        pushButton_SMS->setStyleSheet(QString::fromUtf8("\n"
+"#pushButton_21{\n"
+"color: rgb(0, 0, 0);\n"
+"}\n"
+"QPushButton, #pushButton_21{\n"
+"	background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(11, 131, 120, 219), stop:1 rgba(85, 98, 112, 226));\n"
+"	color:rgba(255, 255, 255, 210);\n"
+"	border-radius:5px;\n"
+"}\n"
+"\n"
+"QPushButton#pushButton_21:hover{\n"
+"	background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(150, 123, 111, 219), stop:1 rgba(85, 81, 84, 226));\n"
+"}\n"
+"\n"
+"QPushButton#pushButton_21:pressed{\n"
+"	padding-left:5px;\n"
+"	padding-top:5px;\n"
+"	background-color:rgba(150, 123, 111, 255);\n"
+"}\n"
+""));
+        lineEdit_category_2 = new QLineEdit(frame_16);
+        lineEdit_category_2->setObjectName(QString::fromUtf8("lineEdit_category_2"));
+        lineEdit_category_2->setGeometry(QRect(500, 460, 161, 28));
+        lineEdit_category_2->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        lineEdit_category_3 = new QLineEdit(frame_16);
+        lineEdit_category_3->setObjectName(QString::fromUtf8("lineEdit_category_3"));
+        lineEdit_category_3->setGeometry(QRect(500, 520, 161, 28));
+        lineEdit_category_3->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"));
+        label_76 = new QLabel(frame_16);
+        label_76->setObjectName(QString::fromUtf8("label_76"));
+        label_76->setGeometry(QRect(460, 430, 221, 21));
+        label_76->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
+        label_77 = new QLabel(frame_16);
+        label_77->setObjectName(QString::fromUtf8("label_77"));
+        label_77->setGeometry(QRect(540, 490, 91, 21));
+        label_77->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
         pic1_4 = new QLabel(a2);
         pic1_4->setObjectName(QString::fromUtf8("pic1_4"));
         pic1_4->setGeometry(QRect(180, 10, 591, 151));
@@ -3162,7 +3256,9 @@ public:
         pushButton_13->setText(QCoreApplication::translate("MainWindow", "Done", nullptr));
         label_56->setText(QString());
         label_62->setText(QString());
-        label_74->setText(QCoreApplication::translate("MainWindow", "Statistic :", nullptr));
+        label_74->setText(QCoreApplication::translate("MainWindow", "Statistics :", nullptr));
+        pushButton_statpiechart->setText(QCoreApplication::translate("MainWindow", "Transaction by payment method", nullptr));
+        pushButton_stathistogramme->setText(QCoreApplication::translate("MainWindow", "Number of Transactions by type", nullptr));
         pushButton_22->setText(QString());
         label_16->setText(QCoreApplication::translate("MainWindow", "CIN:", nullptr));
         label_17->setText(QCoreApplication::translate("MainWindow", "First Name:", nullptr));
@@ -3236,21 +3332,24 @@ public:
         pushButton_23->setText(QString());
         label_38->setText(QCoreApplication::translate("MainWindow", "Date of Transaction:", nullptr));
         label_24->setText(QCoreApplication::translate("MainWindow", "      Add Transaction ", nullptr));
-        add_5->setText(QCoreApplication::translate("MainWindow", "Modify", nullptr));
+        modif_trans->setText(QCoreApplication::translate("MainWindow", "Modify", nullptr));
         label_63->setText(QCoreApplication::translate("MainWindow", "ID transaction:", nullptr));
         label_32->setText(QCoreApplication::translate("MainWindow", "Sort by", nullptr));
         label_31->setText(QCoreApplication::translate("MainWindow", "Search for transaction", nullptr));
-        comboBox_5->setItemText(0, QCoreApplication::translate("MainWindow", "Total Amount", nullptr));
-        comboBox_5->setItemText(1, QCoreApplication::translate("MainWindow", "Date of transaction", nullptr));
-        comboBox_5->setItemText(2, QCoreApplication::translate("MainWindow", "Type", nullptr));
+        comboBox_triertrans->setItemText(0, QCoreApplication::translate("MainWindow", "ID", nullptr));
+        comboBox_triertrans->setItemText(1, QCoreApplication::translate("MainWindow", "Total Amount", nullptr));
+        comboBox_triertrans->setItemText(2, QCoreApplication::translate("MainWindow", "Date transaction", nullptr));
 
-        pushButton_5->setText(QCoreApplication::translate("MainWindow", "Done", nullptr));
-        edit_4->setText(QCoreApplication::translate("MainWindow", "Search for Transaction", nullptr));
-        edit_4->setPlaceholderText(QCoreApplication::translate("MainWindow", "Type here.....", nullptr));
+        pushButton_donesearch->setText(QCoreApplication::translate("MainWindow", "Done", nullptr));
+        edit_search->setText(QCoreApplication::translate("MainWindow", "Search for Transaction", nullptr));
+        edit_search->setPlaceholderText(QCoreApplication::translate("MainWindow", "Type here.....", nullptr));
         edit_iddelete->setPlaceholderText(QCoreApplication::translate("MainWindow", "Type here.....", nullptr));
         label_49->setText(QString());
         pushButton_delete->setText(QCoreApplication::translate("MainWindow", "Delete Transaction", nullptr));
-        pushButton_33->setText(QCoreApplication::translate("MainWindow", "Exporting PDF", nullptr));
+        pushButton_exporterpdf->setText(QCoreApplication::translate("MainWindow", "Exporting PDF", nullptr));
+        pushButton_SMS->setText(QCoreApplication::translate("MainWindow", "SMS", nullptr));
+        label_76->setText(QCoreApplication::translate("MainWindow", "PHONE NUMBER OF TREASURER:", nullptr));
+        label_77->setText(QCoreApplication::translate("MainWindow", "MESSAGE:", nullptr));
         pic1_4->setText(QString());
         p9->setText(QCoreApplication::translate("MainWindow", "home    ", nullptr));
         p14->setText(QCoreApplication::translate("MainWindow", "HR manager", nullptr));

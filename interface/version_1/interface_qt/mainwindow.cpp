@@ -4,7 +4,21 @@
 #include <QPixmap>
 #include<QMessageBox>
 #include"transactions.h"
-
+#include<QFileDialog>
+#include<QPainter>
+#include<QPdfWriter>
+#include<QSqlError>
+#include<QDebug>
+#include<QSqlQuery>
+#include <QDesktopServices>
+#include<QDir>
+#include<QPageSize>
+#include<QMargins>
+#include<QImage>
+#include<QRectF>
+#include<QFont>
+#include<QStringList>
+#include<QUrl>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -35,6 +49,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect ajoutemp button to its slot
     connect(ui->pushButton_8, &QPushButton::clicked, this, &MainWindow::on_pushButton_8_clicked);
+      // Connect modify button to its slot
+
+
+    connect(ui->modif_trans, &QPushButton::clicked, this, &MainWindow::on_modif_trans_clicked);
+    // Connexion du QComboBox pour trier les transactions
+        connect(ui->comboBox_triertrans, SIGNAL(currentIndexChanged(int)), this, SLOT(on_comboBox_triertrans_currentIndexChanged(int)));
 
 
     // Connect salary button to its slot
@@ -134,3 +154,237 @@ void MainWindow::on_pushButton_delete_clicked()
 
 }
 
+
+
+
+void MainWindow::on_modif_trans_clicked()
+{
+    // Récupération des informations saisies dans les champs pour modification
+        int id = ui->lineEdit_idtrans->text().toInt();
+        float total_amount = ui->lineEdit_totamount->text().toFloat();
+        QString type = ui->lineEdit_type->text();
+        QString category = ui->lineEdit_category->text();
+        QString payment_method = ui->lineEdit_payment->text();
+        QDate date_transaction = ui->dateEdit_date->date();
+
+        // Créer un objet temporaire pour mettre à jour la transaction
+        transactions T;
+        T.setId_transaction(id);
+        T.setTotal_amount(total_amount);
+        T.setType(type);
+        T.setCategory(category);
+        T.setPayment_method(payment_method);
+        T.setDate(date_transaction);
+
+        // Appel de la fonction de modification
+        bool test = T.modifier(id);
+
+        if (test) {
+            // Refresh
+            ui->tableView->setModel(Ttmp.afficher());
+            QMessageBox::information(nullptr, QObject::tr("OK"), QObject::tr("Modification effectuée\nClick Cancel to exit."), QMessageBox::Cancel);
+        } else {
+            QMessageBox::critical(nullptr, QObject::tr("Not OK"), QObject::tr("Modification non effectuée.\nClick Cancel to exit."), QMessageBox::Cancel);
+        }
+}
+
+
+void MainWindow::on_pushButton_donesearch_clicked()
+{
+    QString searchText = ui->edit_search->text(); // Texte saisi par l'utilisateur
+
+        // Vérification des critères
+        bool isIdValid = false;
+        bool isTotalAmountValid = false;
+
+        int id = searchText.toInt(&isIdValid); // Conversion en int
+        float totalAmount = searchText.toFloat(&isTotalAmountValid); // Conversion en float
+
+        if (isIdValid && id > 0) {
+            // Recherche par ID
+            ui->tableView->setModel(Ttmp.rechercher(id, "", 0.0));
+        } else if (!searchText.isEmpty() && !isTotalAmountValid) {
+            // Recherche par catégorie (si ce n'est pas un float)
+            ui->tableView->setModel(Ttmp.rechercher(0, searchText, 0.0));
+        } else if (isTotalAmountValid && totalAmount > 0.0) {
+            // Recherche par montant total
+            ui->tableView->setModel(Ttmp.rechercher(0, "", totalAmount));
+        } else {
+            QMessageBox::warning(this, "Recherche invalide", "Veuillez saisir un critère de recherche valide (ID, Catégorie ou Montant total).");
+        }
+}
+
+
+
+
+void MainWindow::on_comboBox_triertrans_currentIndexChanged(int index)
+
+{       Q_UNUSED(index);
+    // Récupération du critère sélectionné dans le QComboBox
+       QString critere = ui->comboBox_triertrans->currentText();
+
+       // Appel de la fonction trier de la classe transactions
+       ui->tableView->setModel(Ttmp.trier(critere));  // Ttmp est l'objet de la classe transactions
+}
+
+
+void MainWindow::on_pushButton_exporterpdf_clicked()
+{// Définir le chemin où le PDF sera enregistré
+    QString currentPath = QDir::currentPath();
+    QString pdfPath = currentPath + "/PDFS/transactions.pdf";
+
+    // Créer le dossier "PDFS" s'il n'existe pas
+    QDir dir(currentPath + "/PDFS");
+    if (!dir.exists()) {
+        dir.mkpath(".");
+    }
+
+    // Initialiser QPdfWriter
+    QPdfWriter pdf(pdfPath);
+    pdf.setPageSize(QPageSize(QPageSize::A4));
+    pdf.setPageMargins(QMargins(30, 30, 30, 30));
+
+    QPainter painter(&pdf);
+
+    // Ajouter un logo (optionnel)
+    QImage logo(currentPath + "/icons/Logo.png");
+    if (!logo.isNull()) {
+        painter.drawImage(QRectF(100, 50, 1500, 1500), logo); // Ajuster la position et la taille du logo
+    }
+
+    // Titre du document
+    painter.setPen(Qt::blue);
+    painter.setFont(QFont("Arial", 20, QFont::Bold)); // Taille de police réduite
+    painter.drawText(QRectF(0, 1500, pdf.width(), 500), Qt::AlignCenter, "Transactions List");
+
+    // En-têtes de tableau
+    int pageWidth = pdf.width();
+    int tableWidth = pageWidth * 0.9; // Tableau large à 90% de la largeur de la page
+    int columnWidth = tableWidth / 6; // Répartition en 6 colonnes
+    int xLeftMargin = (pageWidth - tableWidth) / 2; // Centrer horizontalement
+    int yStart = 2500;        // Position verticale de départ
+    int rowHeight = 400;      // Hauteur réduite pour chaque ligne
+
+    // Dessiner l'arrière-plan des en-têtes
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(Qt::lightGray);
+    painter.drawRect(xLeftMargin, yStart, tableWidth, rowHeight);
+
+    // Définir le style des en-têtes
+    painter.setFont(QFont("Arial", 8, QFont::Bold)); // Réduction de la taille de la police
+    painter.setPen(Qt::black);
+
+    QStringList headers = { "ID", "Total Amount", "Type", "Category", "Payment Method", "Date" };
+    for (int i = 0; i < headers.size(); ++i) {
+        painter.drawText(xLeftMargin + i * columnWidth, yStart + 300, headers[i]);
+    }
+
+    // Dessiner le contenu du tableau
+    yStart += rowHeight; // Descendre sous les en-têtes
+    painter.setFont(QFont("Arial", 9)); // Police plus petite pour les données
+    painter.setPen(Qt::black);
+
+    QSqlQuery query;
+    query.prepare("SELECT ID_TRANSACTION, TOTAL_AMOUNT, TYPE, CATEGORY, PAYMENT_METHOD, DATE_TRANSACTION FROM transactions");
+    query.exec();
+
+    while (query.next()) {
+        painter.drawText(xLeftMargin + 0 * columnWidth, yStart + 300, query.value(0).toString());
+        painter.drawText(xLeftMargin + 1 * columnWidth, yStart + 300, query.value(1).toString());
+        painter.drawText(xLeftMargin + 2 * columnWidth, yStart + 300, query.value(2).toString());
+        painter.drawText(xLeftMargin + 3 * columnWidth, yStart + 300, query.value(3).toString());
+        painter.drawText(xLeftMargin + 4 * columnWidth, yStart + 300, query.value(4).toString());
+        painter.drawText(xLeftMargin + 5 * columnWidth, yStart + 300, query.value(5).toDate().toString("dd/MM/yyyy"));
+        yStart += rowHeight;
+    }
+
+    // Terminer le dessin
+    painter.end();
+
+    // Afficher un message pour l'utilisateur
+    int response = QMessageBox::question(
+        this, "Generate PDF",
+        "<PDF Saved>... Do You Want to View the PDF?",
+        QMessageBox::Yes | QMessageBox::No);
+
+    if (response == QMessageBox::Yes) {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(pdfPath));
+    }
+}
+////////////////////////////////////statistiques////////////////////////////////////
+
+/*void MainWindow::sendSms(const QString& toPhoneNumber, const QString& message)
+{
+
+    // Twilio credentials
+    const QString accountSid = "";
+    const QString authToken = "";
+    const QString fromPhoneNumber = "";  // Replace with your Twilio number
+
+    // API endpoint
+    QUrl apiUrl("https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json");
+
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+    QNetworkRequest request(apiUrl);
+
+
+
+    // QUrl apiUrl("https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json");
+    QString authValue = "Basic " + QString(QByteArray(QString("%1:%2").arg(accountSid).arg(authToken).toUtf8()).toBase64());
+    request.setRawHeader("Authorization", authValue.toUtf8());
+
+
+    QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+    QHttpPart toPart;
+    toPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"To\""));
+    toPart.setBody(toPhoneNumber.toUtf8());
+
+    QHttpPart fromPart;
+    fromPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"From\""));
+    fromPart.setBody(fromPhoneNumber.toUtf8());
+
+    QHttpPart bodyPart;
+    bodyPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"Body\""));
+    bodyPart.setBody(message.toUtf8());
+
+
+    multiPart->append(toPart);
+    multiPart->append(fromPart);
+    multiPart->append(bodyPart);
+
+
+    QNetworkReply* reply = manager->post(request, multiPart);
+    multiPart->setParent(reply);
+
+    connect(reply, &QNetworkReply::finished, [reply]() {
+        if (reply->error() == QNetworkReply::NoError) {
+            QMessageBox::information(nullptr, "Success", "SMS sent successfully!");
+        } else {
+            QByteArray responseData = reply->readAll();
+            QJsonDocument jsonResponse = QJsonDocument::fromJson(responseData);
+            QString errorMessage = jsonResponse["message"].toString();
+
+            qDebug() << "Error sending SMS:" << reply->errorString();
+            qDebug() << "Twilio response:" << jsonResponse;
+            QMessageBox::warning(nullptr, "Error", "Failed to send SMS: " + errorMessage);
+        }
+        reply->deleteLater();
+    });
+}
+void MainWindow::onSmsSent(QNetworkReply* reply)
+{
+    // Check if the SMS was sent successfully
+    if (reply->error() == QNetworkReply::NoError) {
+        QMessageBox::information(this, "Success", "SMS sent successfully!");
+    } else {
+        // Handle error and show the response from the Twilio API
+        QString error = reply->errorString();
+        qDebug() << "Error sending SMS: " << error;
+        QMessageBox::warning(this, "Error", "Failed to send SMS: " + error);
+    }
+
+    // Clean up after the reply
+    reply->deleteLater();
+}*/

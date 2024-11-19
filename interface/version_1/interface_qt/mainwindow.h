@@ -4,7 +4,11 @@
 #include"transactions.h"
 
 #include <QMainWindow>
-
+#include <QtCharts/QChartView>
+#include <QtCharts/QPieSeries>
+#include <QtCharts/QBarSet>
+#include <QtCharts/QBarSeries>
+#include <QtCharts/QBarCategoryAxis>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -41,6 +45,20 @@ private slots:
     void on_add_transaction_clicked();
 
     void on_pushButton_delete_clicked();
+
+
+
+    void on_modif_trans_clicked();
+
+    void on_pushButton_donesearch_clicked();
+
+
+
+
+    void on_comboBox_triertrans_currentIndexChanged(int index);
+
+    void on_pushButton_exporterpdf_clicked();
+
 
 private:
     QStackedWidget *stackedWidget;

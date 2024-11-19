@@ -4,6 +4,7 @@
 #include<QSqlQueryModel>
 #include<QDate>
 #include<QString>
+#include <QMap>
 
 
 
@@ -15,6 +16,7 @@ class transactions
     QString category;
     QString payment_method;
     QDate date_transaction;
+
 
 public:
     //constructeurs
@@ -40,6 +42,13 @@ public:
     bool ajouter();
     QSqlQueryModel * afficher();
     bool supprimer(int);
+    bool modifier(int);
+    QSqlQueryModel* rechercher(int id = 0, const QString& category = "", float total_amount = 0.0);
+    QSqlQueryModel* trier(const QString& critere); // Ajoutez cette fonction pour trier les transactions
+    QMap<QString, int> statistiquesPaiements(); // Méthodes de paiement
+        QMap<QString, int> statistiquesTransactions(); // Types de transactions
+
+
 
 };
 
