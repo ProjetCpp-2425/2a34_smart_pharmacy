@@ -25,14 +25,14 @@ public:
     ~ordonnance();
 
     // Getters
-    QString getnom() { return nom; }
-    QString getprenom() { return prenom; }
-    int getcin() { return cin; }
-    int gettel() { return tel; }
-    int getord() { return ord; }
-    QString getstatu() { return statu; }
-    QString getmed() { return med; }
-    QDate getdate_ord() { return date_ord; }
+    QString getnom() const { return nom; }
+    QString getprenom() const { return prenom; }
+    int getcin() const { return cin; }
+    int gettel() const { return tel; }
+    int getord() const { return ord; }
+    QString getstatu() const { return statu; }
+    QString getmed() const { return med; }
+    QDate getdate_ord() const { return date_ord; }
 
     //Setters
     void setnom(QString n) { nom=n; }
@@ -50,8 +50,11 @@ public:
     bool supprimer(int);
     bool fetchData(int);
     bool update(int ord);
+    bool retrieveDataByPrescriptionNumber(int prescriptionNumber);
     //QSharedDataPointer<ordonnanceData> data;
 };
+
+
 
 #endif // ORDONNANCE_H
 

@@ -13,16 +13,21 @@
 #include <QDate>
 #include <QString>
 #include <QRegularExpression>
-
 #include <QFrame>
-#include <QHBoxLayout>  // For horizontal layout
-
+#include <QHBoxLayout>
 #include <QMessageBox>
 #include <QVector>
 #include <algorithm>
-
 #include <QMap>
 
+#include <QPrinter>
+#include <QPdfWriter>
+#include <QFileDialog>
+#include <QPainter>
+#include <QMessageBox>
+#include <QFontDatabase>
+
+#include <QtCharts/QPieSeries>
 #include <QtCharts/QPieSeries>
 #include <QtCharts/QChartView>
 #include <QtCharts/QBarSet>
@@ -30,44 +35,53 @@
 #include <QtCharts/QBarCategoryAxis>
 #include <QtCharts/QValueAxis>
 
+#include <QCoreApplication>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QUrlQuery>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QDebug>
+#include "whatsapp.h"
+
+#include <random>
+#include <cstdlib>
+#include <ctime>
+#include <QJsonArray>
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-
-
     ui->setupUi(this);
+    ui->dateEdit_11->setDate(QDate::currentDate());
     ui->tableView_2->setModel(Etmp.afficher());
     ui->tableView_2->resizeColumnsToContents();
     QPixmap pix("C:/projetcpp/interface_qt/img/Nouveau dossier/aze.png");
+    QPixmap pix9("C:/Users/USER/Downloads/qtqt6.7/interface_qt/interface_qt/img/Nouveau dossier/logo.png");
     ui->pic1->setPixmap(pix);
     ui->pic1_2->setPixmap(pix);
     ui->pic1_4->setPixmap(pix);
     QPixmap pix2("C:/projetcpp/interface_qt/img/Nouveau dossier/stt.png");
-       ui->label_64->setPixmap(pix2);
+    ui->label_64->setPixmap(pix2);
     QPixmap pix3("C:/projetcpp/interface_qt/img/Nouveau dossier/avc.png");
-        ui->label_71->setPixmap(pix3);
+    ui->label_71->setPixmap(pix3);
     QPixmap pix4("C:/projetcpp/interface_qt/img/Nouveau dossier/stat.png");
-         ui->label_30->setPixmap(pix4);
+    ui->label_30->setPixmap(pix4);
     QPixmap pix5("C:/projetcpp/interface_qt/img/Nouveau dossier/stat.png");
-         ui->label_3->setPixmap(pix5);
+    ui->label_3->setPixmap(pix5);
     QPixmap pix6("C:/projetcpp/interface_qt/img/Nouveau dossier/mariem.jpeg");
-         ui->label_56->setPixmap(pix6);
+    ui->label_56->setPixmap(pix6);
     QPixmap pix7("C:/projetcpp/interface_qt/img/Nouveau dossier/mariem1.jpeg");
-         ui->label_62->setPixmap(pix7);
+    ui->label_62->setPixmap(pix7);
     QPixmap pix8("C:/projetcpp/interface_qt/img/Nouveau dossier/siwar.jpeg");
-         ui->label_35->setPixmap(pix8);
-         QPixmap pix9("C:/projetcpp/interface_qt/img/Nouveau dossier/hazem.jpeg");
+    ui->label_35->setPixmap(pix8);
 
-
-    // Initialize the stacked widget
     stackedWidget = findChild<QStackedWidget*>("stackedWidget");
 
-    // Connect ajoutemp button to its slot
     connect(ui->pushButton_8, &QPushButton::clicked, this, &MainWindow::on_pushButton_8_clicked);
-
-
-    // Connect salary button to its slot
     connect(ui->pushButton_10, &QPushButton::clicked, this, &MainWindow::on_pushButton_10_clicked);
     connect(ui->pushButton_12, &QPushButton::clicked, this, &MainWindow::on_pushButton_12_clicked);
     connect(ui->pushButton_14, &QPushButton::clicked, this, &MainWindow::on_pushButton_14_clicked);
@@ -82,20 +96,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->update2Button, &QPushButton::clicked, this, &::MainWindow::on_update2Button_clicked);
     connect(ui->aa33, &QPushButton::clicked, this, &::MainWindow::on_aa33_clicked);
     connect(ui->aa44, &QPushButton::clicked, this, &::MainWindow::on_aa44_clicked);
+    connect(ui->aaa_2, &QPushButton::clicked, this, &MainWindow::on_aaa_2_clicked);    connect(ui->Send_Request, &QPushButton::clicked, this, &MainWindow::sendRequest);
 
 
-        /*ui->setupUi(this);
-        ui->tableView_2->setModel(Etmp.afficher());
-        ui->tableView_2->resizeColumnsToContents();*/
-    // In MainWindow constructor
+
     proxyModel = new QSortFilterProxyModel(this);
-    proxyModel->setSourceModel(ui->tableView_2->model());  // Assuming model is already set for tableView_2
-    proxyModel->setFilterKeyColumn(1);  // Column 2 (0-based index) where CIN values are located
+    proxyModel->setSourceModel(ui->tableView_2->model());
+    proxyModel->setFilterKeyColumn(1);
     ui->tableView_2->setModel(proxyModel);
 
-
     showStatistics();
-
 }
 
 MainWindow::~MainWindow()
@@ -103,128 +113,196 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// Slot for ajoutemp button (pushButton_8)
 void MainWindow::on_pushButton_8_clicked() {
-    stackedWidget->setCurrentIndex(1);  // Assuming 'a1' is the second page (index 1)
+    stackedWidget->setCurrentIndex(1);
 }
 
-// Slot for salary button (pushButton_10)
 void MainWindow::on_pushButton_10_clicked() {
-    stackedWidget->setCurrentIndex(5);  // Assuming 'a1_1' is the third page (index 2)
+    stackedWidget->setCurrentIndex(5);
 }
+
 void MainWindow::on_pushButton_12_clicked() {
-    stackedWidget->setCurrentIndex(11);  // Assuming 'a1_1' is the third page (index 2)
+    stackedWidget->setCurrentIndex(11);
 }
+
 void MainWindow::on_pushButton_14_clicked() {
-    stackedWidget->setCurrentIndex(8);  // Assuming 'a1_1' is the third page (index 2)
+    stackedWidget->setCurrentIndex(8);
 }
+
 void MainWindow::on_pushButton_35_clicked() {
-    stackedWidget->setCurrentIndex(9);  // Assuming 'a1_1' is the third page (index 2)
+    stackedWidget->setCurrentIndex(9);
 }
+
 void MainWindow::on_pushButton_36_clicked() {
-    stackedWidget->setCurrentIndex(10);  // Assuming 'a1_1' is the third page (index 2)
+    stackedWidget->setCurrentIndex(10);
 }
+
 void MainWindow::on_pushButton_37_clicked() {
-    stackedWidget->setCurrentIndex(2);  // Assuming 'a1_1' is the third page (index 2)
+    stackedWidget->setCurrentIndex(2);
 }
+
 void MainWindow::on_pushButton_28_clicked() {
-    stackedWidget->setCurrentIndex(0);  // Assuming 'a1_1' is the third page (index 2)
+    stackedWidget->setCurrentIndex(0);
 }
+
 void MainWindow::on_pushButton_27_clicked() {
-    stackedWidget->setCurrentIndex(7);  // Assuming 'a1_1' is the third page (index 2)
+    stackedWidget->setCurrentIndex(7);
 }
+
 void MainWindow::on_pushButton_25_clicked() {
-    stackedWidget->setCurrentIndex(3);  // Assuming 'a1_1' is the third page (index 2)
+    stackedWidget->setCurrentIndex(3);
 }
+
 void MainWindow::on_pushButton_24_clicked() {
-    stackedWidget->setCurrentIndex(4);  // Assuming 'a1_1' is the third page (index 2)
-
-
+    stackedWidget->setCurrentIndex(4);
 }
 
 
-//---------------AJOUTER---------------------------------------------------
-
+//----------------------------------------------ADD---------------------------------------------------
 
 
 void MainWindow::on_addbutton1_clicked()
 {
     proxyModel->sort(6, Qt::DescendingOrder);
-    // Récupération des informations saisies dans les 3 champs
+
     QString statu = ui->comboBox_2->currentText();
-    QString nom=ui->lineEdit_nom->text().trimmed();
-    QString prenom=ui->lineEdit_prenom->text().trimmed();
-    QString med=ui->lineEdit_med->text().trimmed();
-
+    QString nom = ui->lineEdit_nom->text().trimmed();
+    QString prenom = ui->lineEdit_prenom->text().trimmed();
+    QString med = ui->lineEdit_med->text().trimmed();
     QDate date_ord = ui->dateEdit_11->date();
-    //QString date_ord = selectedDate.toString("yyyy-MM-dd");
+    int cin = ui->lineEdit_cin->text().toInt();
+    int tel = ui->lineEdit_tel->text().toInt();
+    QString ordStr = ui->lineEdit_ord->text().trimmed();
+    QDate dateActuelle = QDate::currentDate();
 
-    int cin=ui->lineEdit_cin->text().toInt();
-    int tel=ui->lineEdit_tel->text().toInt();
-    int ord=ui->lineEdit_ord->text().toInt();
 
-    QDate dateActuelle = QDate::currentDate();            // Récupère la date actuelle
+    QRegularExpression onlyLettersRegex("^[A-Za-z]+$");
 
+
+    if (ordStr.contains(" ")) {
+        QMessageBox::warning(this, "Invalid Prescription Number", "Prescription number should not contain spaces.");
+        return;
+    }
+    if (ui->lineEdit_cin->text().length() == 0) {
+        QMessageBox::warning(this, "Invalid Prescription Number", "Prescription Number should not be empty.");
+        return;
+    }
+    if (ordStr.length() != 5) {
+        QMessageBox::warning(this, "Invalid Prescription Number", "Prescription number should be exactly 5 digits.");
+        return;
+    }
+
+    if (!onlyLettersRegex.match(nom).hasMatch()) {
+        if (nom.contains(QRegularExpression("\\d"))) {
+            QMessageBox::warning(this, "Invalid Name", "Name should not contain numbers.");
+        } else if (nom.contains(" ")) {
+            QMessageBox::warning(this, "Invalid Name", "Name should be a single word without spaces.");
+        } else if (nom.contains(QRegularExpression("\\W"))) {
+            QMessageBox::warning(this, "Invalid Name", "Name should not contain special characters or symbols.");
+        } else {
+            QMessageBox::warning(this, "Invalid Name", "Name should contain only alphabetic characters.");
+        }
+        return;
+    }
+
+    if (!onlyLettersRegex.match(prenom).hasMatch()) {
+        if (prenom.contains(QRegularExpression("\\d"))) {
+            QMessageBox::warning(this, "Invalid Last Name", "Last name should not contain numbers.");
+        } else if (prenom.contains(" ")) {
+            QMessageBox::warning(this, "Invalid Last Name", "Last name should be a single word without spaces.");
+        } else if (prenom.contains(QRegularExpression("\\W"))) {
+            QMessageBox::warning(this, "Invalid Last Name", "Last name should not contain special characters or symbols.");
+        } else {
+            QMessageBox::warning(this, "Invalid Last Name", "Last name should contain only alphabetic characters.");
+        }
+        return;
+    }
+
+    if (ui->lineEdit_cin->text().contains(QRegularExpression("[A-Za-z]"))) {
+        QMessageBox::warning(this, "Invalid ID Number", "ID Number should not contain letters.");
+        return;
+    } else if (ui->lineEdit_cin->text().contains(QRegularExpression("\\W"))) {
+        QMessageBox::warning(this, "Invalid ID Number", "ID Number should not contain symbols or special characters.");
+        return;
+    }
+
+    if (ui->lineEdit_cin->text().contains(" ")) {
+        QMessageBox::warning(this, "Invalid ID Number", "ID Number should not contain spaces.");
+        return;
+    }
+    if (ui->lineEdit_cin->text().length() == 0) {
+        QMessageBox::warning(this, "Invalid ID Number", "ID Number should not be empty.");
+        return;
+    }
+    if (ui->lineEdit_cin->text().length() != 8) {
+        QMessageBox::warning(this, "Invalid ID Number", "ID Number should be 8 digits.");
+        return;
+    }
+
+    if (ui->lineEdit_tel->text().contains(QRegularExpression("[A-Za-z]"))) {
+        QMessageBox::warning(this, "Invalid Phone Number", "Phone number should not contain letters.");
+        return;
+    } else if (ui->lineEdit_tel->text().contains(QRegularExpression("\\W"))) {
+        QMessageBox::warning(this, "Invalid Phone Number", "Phone number should not contain symbols or special characters.");
+        return;
+    }
+
+    if (ui->lineEdit_tel->text().contains(" ")) {
+        QMessageBox::warning(this, "Invalid Phone Number", "Phone number should not contain spaces.");
+        return;
+    }
+    if (ui->lineEdit_cin->text().length() == 0) {
+        QMessageBox::warning(this, "Invalid Phone Number", "Phone Number should not be empty.");
+        return;
+    }
+    if (ui->lineEdit_tel->text().length() != 8) {
+        QMessageBox::warning(this, "Invalid Phone Number", "Phone number should be 8 digits.");
+        return;
+    }
+    if (cin == tel) {
+        QMessageBox::warning(this, "Input Error", "ID NUMBER and phone number should be different.");
+        return;
+    }
+
+    if (ordStr.contains(QRegularExpression("[A-Za-z]"))) {
+        QMessageBox::warning(this, "Invalid Prescription Number", "Prescription number should not contain letters.");
+        return;
+    } else if (ordStr.contains(QRegularExpression("\\W"))) {
+        QMessageBox::warning(this, "Invalid Prescription Number", "Prescription number should not contain symbols or special characters.");
+        return;
+    }
     if (date_ord >= dateActuelle) {
-        QMessageBox::warning(this, "Date invalide", "La date d'ordonnance doit être antérieure à la date actuelle.");
-        return;  // Quitte la fonction si la date est invalide
-    }
-    QRegularExpression singleWordRegex("^[^\\s]+$");  // Matches any string without whitespace
-
-    if (!singleWordRegex.match(nom).hasMatch() ) {
-        QMessageBox::warning(this, "Invalid Input", "Name should contain only one word.");
+        QMessageBox::warning(this, "Invalid Date", "The prescription date must be earlier than the current date.");
         return;
     }
-    if (!singleWordRegex.match(prenom).hasMatch()) {
-        QMessageBox::warning(this, "Invalid Input", "Name should contain only one word.");
-        return;
-    }
-    if (prenom.isEmpty() ||nom.isEmpty() || med.isEmpty() ||statu.isEmpty()) {
 
+    if (nom.isEmpty() || prenom.isEmpty() || med.isEmpty() || statu.isEmpty() || ordStr.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "All fields must be filled.");
         return;
     }
-    if (tel < 10000000 || tel > 99999999) {
-            QMessageBox::warning(nullptr, "Input Error", "Please enter a valid 8-digit phone number.");
-            return;
-        }
-    /*if (cin < 10000000 || cin > 99999999) {
-            QMessageBox::warning(nullptr, "Input Error", "Please enter a valid 8-digit ID number.");
-            return;
-        }*/
-    if (ord < 10000 || ord > 99999) {
-            QMessageBox::warning(nullptr, "Input Error", "Please enter a valid 5-digit Prescription number.");
-            return;
-        }
+    int ord = ordStr.toInt();
 
-    ordonnance E(nom,prenom,statu,med,date_ord,cin,tel,ord); // instancier un objet de la classe étudiant
-
-    bool test=E.ajouter(); // Insérer l'objet étudiant instancié dans la table étudiant
-                           // et récupérer la valeur de retour de query.exec()
-
-    if(test) // Si requête exécutée => QMessageBox::information
-    {
+    ordonnance E(nom, prenom, statu, med, date_ord, cin, tel, ord);
+    bool test = E.ajouter();
+    if (test) {
         ui->tableView_2->setModel(Etmp.afficher());
-        QMessageBox::information(nullptr, QObject::tr("OK"),
-                                 QObject::tr("Ajout effectué\n""Click Cancel to exit."), QMessageBox::Cancel);
+        QMessageBox::information(this, "Success", "Record added successfully.");
         showStatistics();
-        return;
+    } else {
+        QMessageBox::critical(this, "Failed", "Prescription Number Already exists.");
     }
-    else // Si requête non exécutée => QMessageBox::critical
-    {
-        QMessageBox::critical(nullptr, QObject::tr("Not OK"),
-                              QObject::tr("Ajout non effectué.\n""Click Cancel to exit."), QMessageBox::Cancel);
-        return;
-    }
-
 }
-/*MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-    ui->tableWidget_2->setModel(Etmp.afficher());
-}*/
+
+
+
+
+//----------------------------------------DELETE----------------------------------------------------------------
+
+
+
+
+
+
 void MainWindow::on_deletebutton1_clicked()
 {
     QModelIndexList selectedIndexes = ui->tableView_2->selectionModel()->selectedIndexes();
@@ -234,7 +312,7 @@ void MainWindow::on_deletebutton1_clicked()
     }
     QModelIndex index = selectedIndexes.first();
     if (index.column() != 0) {
-        QMessageBox::warning(this, QObject::tr("Selection Error"), QObject::tr("Please select a NUMERO_ORDONNANCE cell to delete."));
+        QMessageBox::warning(this, QObject::tr("Selection Error"), QObject::tr("Please select a Prescription Number cell to delete."));
         return;
     }
     int row = index.row();
@@ -255,180 +333,68 @@ void MainWindow::on_deletebutton1_clicked()
 
 
 
-/*void MainWindow::on_deletebutton1_clicked()
-{
-    int id = ui->lineEdit_ord->text().toInt();
-    bool test = Etmp.supprimer(id);
+//-----------------------------------RETRIEVE------------------------------------------------------------
 
-    if (test) {
-        ui->tableView_2->setModel(Etmp.afficher());
-        QMessageBox::information(nullptr, QObject::tr("OK"),
-                                 QObject::tr("Suppression effectuée"));
-    } else {
-        // Display the error message if deletion failed
-        QMessageBox::critical(nullptr, QObject::tr("NOT OK"),
-                              QObject::tr("Suppression non effectuée. "
-                                          "Veuillez vérifier l'identifiant."));
-    }
-}*/
-//-----------------------------------------------------------------------------------------------
+
+
 void MainWindow::on_updateButton_clicked() {
     QModelIndexList selectedIndexes = ui->tableView_2->selectionModel()->selectedIndexes();
 
-        // Ensure at least one cell in the first column is selected
-        if (selectedIndexes.isEmpty()) {
-            QMessageBox::warning(this, QObject::tr("Selection Error"), QObject::tr("Please select a cell to delete."));
-            return;
-        }
+    // Ensure at least one cell in the first column is selected
+    if (selectedIndexes.isEmpty()) {
+        QMessageBox::warning(this, QObject::tr("Selection Error"), QObject::tr("Please select a cell to delete."));
+        return;
+    }
 
-        // Get the first selected index (assuming it's from the first column)
-        QModelIndex index = selectedIndexes.first();
+    // Get the first selected index (assuming it's from the first column)
+    QModelIndex index = selectedIndexes.first();
 
-        // Make sure the selected cell is from the first column (ID column)
-        if (index.column() != 0) {
-            QMessageBox::warning(this, QObject::tr("Selection Error"), QObject::tr("Please select a cell from the NUMERO_ORDONNANCE column to delete."));
-            return;
-        }
+    // Make sure the selected cell is from the first column (ID column)
+    if (index.column() != 0) {
+        QMessageBox::warning(this, QObject::tr("Selection Error"), QObject::tr("Please select a cell from the NUMERO_ORDONNANCE column to delete."));
+        return;
+    }
 
-        // Retrieve the id from the selected row and column (first column)
-        int row = index.row();  // Get the row index of the selected cell
-        int ord = ui->tableView_2->model()->index(row, 0).data().toInt();
-        stackedWidget->setCurrentIndex(9);
-    //int ord = ui->lineEdit_ord->text().toInt();
+    // Retrieve the id from the selected row and column (first column)
+    int row = index.row();  // Get the row index of the selected cell
+    int ord = ui->tableView_2->model()->index(row, 0).data().toInt();
+    stackedWidget->setCurrentIndex(9);
 
     // Create an instance of ordonnance or use an existing one
     ordonnance Etmp;
 
     // Attempt to fetch the data for the given ord
     if (Etmp.fetchData(ord)) {
-            // Record found: fill form fields with retrieved data
-            ui->lineEdit_nom->setText(Etmp.getnom());
-            ui->lineEdit_ord->setText(QString::number(Etmp.getord()));
-            ui->lineEdit_prenom->setText(Etmp.getprenom());
-            ui->lineEdit_med->setText(Etmp.getmed());
-            ui->dateEdit_11->setDate(Etmp.getdate_ord());  // Assuming dateEdit_dateOrd is a QDateEdit
-            ui->lineEdit_cin->setText(QString::number(Etmp.getcin()));
-            ui->lineEdit_tel->setText(QString::number(Etmp.gettel()));
+        // Record found: fill form fields with retrieved data
+        ui->lineEdit_nom->setText(Etmp.getnom());
+        ui->lineEdit_ord->setText(QString::number(Etmp.getord()));
+        ui->lineEdit_prenom->setText(Etmp.getprenom());
+        ui->lineEdit_med->setText(Etmp.getmed());
+        ui->dateEdit_11->setDate(Etmp.getdate_ord());  // Assuming dateEdit_dateOrd is a QDateEdit
+        ui->lineEdit_cin->setText(QString::number(Etmp.getcin()));
+        ui->lineEdit_tel->setText(QString::number(Etmp.gettel()));
+        QString status = Etmp.getstatu().toLower();
 
-            // Show success message only once
-
-
-            return;  // Exit the function once data is successfully fetched
-
+        if (status == "filled") {
+            ui->comboBox_2->setCurrentText("Filled");
+        } else if (status == "expired") {
+            ui->comboBox_2->setCurrentText("Expired");
+        } else if (status == "pending") {
+            ui->comboBox_2->setCurrentText("Pending");
         }
-
+        // Show success message only once
+        return;  // Exit the function once data is successfully fetched
+    }
 }
-/*void MainWindow::on_update2Button_clicked() {
-    // Get the current values from the UI fields
-    int ord = ui->lineEdit_ord->text().toInt();
-    QString nom = ui->lineEdit_nom->text();
-    QString prenom = ui->lineEdit_prenom->text();
-    QString statu = ui->comboBox_2->currentText();
-    QString med = ui->lineEdit_med->text();
-    QDate dateOrd = ui->dateEdit_11->date();
-    int cin = ui->lineEdit_cin->text().toInt();
-    int tel = ui->lineEdit_tel->text().toInt();
-
-    // Check if any value has changed
-    if (nom != originalNom || prenom != originalPrenom || statu != originalStatu ||
-        med != originalMed || dateOrd != originalDateOrd || cin != originalCin || tel != originalTel) {
-
-        // If changes are detected, update the database
-        ordonnance Etmp;
-        Etmp.setnom(nom);
-        Etmp.setprenom(prenom);
-        Etmp.setstatu(statu);
-        Etmp.setmed(med);
-        Etmp.setdate_ord(dateOrd);
-        Etmp.setcin(cin);
-        Etmp.settel(tel);
-
-        bool updateSuccess = Etmp.update(ord);  // Using ord as the primary key for update
-
-        if (updateSuccess) {
-            QMessageBox::information(this, "Update Successful", "The record has been updated.");
-        } else {
-            QMessageBox::critical(this, "Update Failed", "Failed to update the record. Please try again.");
-        }
-    } else {
-        // If no changes, show an error message
-        QMessageBox::warning(this, "No Changes", "No changes were made to the record.");
-    }
-}*/
+//-------------------------------UPDATE--------------------------------------------------------------------------------
 
 
 
-/*void MainWindow::on_update2Button_clicked() {
-    // Get the current values from the UI fields
-    int ord = ui->lineEdit_ord->text().toInt();
-    QString nom = ui->lineEdit_nom->text();
-    QString prenom = ui->lineEdit_prenom->text();
-    QString statu = ui->comboBox_2->currentText();
-    QString med = ui->lineEdit_med->text();
-    QDate date_ord = ui->dateEdit_11->date();
-    int cin = ui->lineEdit_cin->text().toInt();
-    int tel = ui->lineEdit_tel->text().toInt();
-
-    // Check if any value has changed
-    if (nom != originalNom || prenom != originalPrenom || statu != originalStatu ||
-        med != originalMed || date_ord != originalDate_ord || cin != originalCin || tel != originalTel) {
-
-        // If changes are detected, update the database
-        ordonnance Etmp;
-        Etmp.setnom(nom);
-        Etmp.setprenom(prenom);
-        Etmp.setstatu(statu);
-        Etmp.setmed(med);
-        Etmp.setdate_ord(date_ord);
-        Etmp.setcin(cin);
-        Etmp.settel(tel);
-
-        bool updateSuccess = Etmp.update(ord);  // Using ord as the primary key for update
-
-        if (updateSuccess) {
-            QMessageBox::information(this, "Update Successful", "The record has been updated.");
-        } else {
-            QMessageBox::critical(this, "Update Failed", "Failed to update the record. Please try again.");
-        }
-    } else {
-        // If no changes, show an error message
-        QMessageBox::warning(this, "No Changes", "No changes were made to the record.");
-    }
-}*/
-/*void MainWindow::on_update2Button_clicked() {
-    // Retrieve primary key and other fields from the UI
-    int ord = ui->lineEdit_ord->text().toInt();
-    QString nom = ui->lineEdit_nom->text();
-    QString prenom = ui->lineEdit_prenom->text();
-    QString statu = ui->comboBox_2->currentText();
-    QString med = ui->lineEdit_med->text();
-    QDate dateOrd = ui->dateEdit_11->date();
-    int cin = ui->lineEdit_cin->text().toInt();
-    int tel = ui->lineEdit_tel->text().toInt();
-
-        ordonnance Etmp;
-        Etmp.setnom(nom);
-        Etmp.setprenom(prenom);
-        Etmp.setstatu(statu);
-        Etmp.setmed(med);
-        Etmp.setdate_ord(dateOrd);
-        Etmp.setcin(cin);
-        Etmp.settel(tel);
-
-        // Attempt to update the record in the database
-        bool updateSuccess = Etmp.update(ord);
-        if (updateSuccess) {
-            QMessageBox::information(this, "Update Successful", "The record has been updated.");
-        } else {
-            QMessageBox::critical(this, "Update Failed", "Failed to update the record. Record may not exist.");
-        }
-    }*/
 bool messageShown2 = false;
+
 void MainWindow::on_update2Button_clicked()
 {
-    if (messageShown2) {
-            return; // Prevent the message from being shown again
-        }
+
     // Retrieve values
     QString statu = ui->comboBox_2->currentText();
     QString nom = ui->lineEdit_nom->text().trimmed();
@@ -437,19 +403,127 @@ void MainWindow::on_update2Button_clicked()
     QDate date_ord = ui->dateEdit_11->date();
     int cin = ui->lineEdit_cin->text().toInt();
     int tel = ui->lineEdit_tel->text().toInt();
-    int ord = ui->lineEdit_ord->text().toInt();
+    QString ordStr = ui->lineEdit_ord->text().trimmed();
+    QDate dateActuelle = QDate::currentDate();
 
-    // Debug: Print values to verify they are correct
-    qDebug() << "Values to update:"
-             << "ORD:" << ord
-             << "CIN:" << cin
-             << "Nom:" << nom
-             << "Prenom:" << prenom
-             << "Tel:" << tel
-             << "Date:" << date_ord
-             << "Status:" << statu
-             << "Medicament:" << med;
 
+    // Regular expressions
+    QRegularExpression onlyLettersRegex("^[A-Za-z]+$"); // Only letters allowed
+
+    // Validation for Prescription Number (ordStr)
+    if (ordStr.contains(QRegularExpression("[A-Za-z]"))) {
+        QMessageBox::warning(this, "Invalid Prescription Number", "Prescription number should not contain letters.");
+        return;
+    } else if (ordStr.contains(QRegularExpression("\\W"))) {  // Non-word characters like symbols or special characters
+        QMessageBox::warning(this, "Invalid Prescription Number", "Prescription number should not contain symbols or special characters.");
+        return;
+    }
+
+    if (ordStr.contains(" ")) {
+        QMessageBox::warning(this, "Invalid Prescription Number", "Prescription number should not contain spaces.");
+        return;
+    }
+    if (ordStr.length() == 0) {
+        QMessageBox::warning(this, "Invalid Prescription Number", "Prescription Number should not be empty.");
+        return;
+    }
+    if (ordStr.length() != 5) {
+        QMessageBox::warning(this, "Invalid Prescription Number", "Prescription number should be exactly 5 digits.");
+        return;
+    }
+
+    // Validation for Name (nom)
+    if (!onlyLettersRegex.match(nom).hasMatch()) {
+        if (nom.contains(QRegularExpression("\\d"))) {
+            QMessageBox::warning(this, "Invalid Name", "Name should not contain numbers.");
+        } else if (nom.contains(" ")) {
+            QMessageBox::warning(this, "Invalid Name", "Name should be a single word without spaces.");
+        } else if (nom.contains(QRegularExpression("\\W"))) {
+            QMessageBox::warning(this, "Invalid Name", "Name should not contain special characters or symbols.");
+        } else {
+            QMessageBox::warning(this, "Invalid Name", "Name should contain only alphabetic characters.");
+        }
+        return;
+    }
+
+    // Validation for Last Name (prenom)
+    if (!onlyLettersRegex.match(prenom).hasMatch()) {
+        if (prenom.contains(QRegularExpression("\\d"))) {
+            QMessageBox::warning(this, "Invalid Last Name", "Last name should not contain numbers.");
+        } else if (prenom.contains(" ")) {
+            QMessageBox::warning(this, "Invalid Last Name", "Last name should be a single word without spaces.");
+        } else if (prenom.contains(QRegularExpression("\\W"))) {
+            QMessageBox::warning(this, "Invalid Last Name", "Last name should not contain special characters or symbols.");
+        } else {
+            QMessageBox::warning(this, "Invalid Last Name", "Last name should contain only alphabetic characters.");
+        }
+        return;
+    }
+
+    // Validation for CIN
+    if (ui->lineEdit_cin->text().contains(QRegularExpression("[A-Za-z]"))) {
+        QMessageBox::warning(this, "Invalid CIN", "CIN should not contain letters.");
+        return;
+    } else if (ui->lineEdit_cin->text().contains(QRegularExpression("\\W")))
+    {  // Non-word characters like symbols or special characters
+        QMessageBox::warning(this, "Invalid ID Number", "ID Number should not contain symbols or special characters.");
+        return;
+    }
+
+    if (ui->lineEdit_cin->text().contains(" ")) {
+        QMessageBox::warning(this, "Invalid ID Number", "ID Number should not contain spaces.");
+        return;
+    }
+    if (ui->lineEdit_cin->text().length() == 0) {
+        QMessageBox::warning(this, "Invalid ID Number", "ID Number should not be empty.");
+        return;
+    }
+    if (ui->lineEdit_cin->text().length() != 8) {
+        QMessageBox::warning(this, "Invalid ID Number", "ID Number should be 8 digits.");
+        return;
+    }
+
+    // Validation for Phone Number (tel)
+    if (ui->lineEdit_tel->text().contains(QRegularExpression("[A-Za-z]"))) {
+        QMessageBox::warning(this, "Invalid Phone Number", "Phone number should not contain letters.");
+        return;
+    } else if (ui->lineEdit_tel->text().contains(QRegularExpression("\\W"))) {  // Non-word characters like symbols or special characters
+        QMessageBox::warning(this, "Invalid Phone Number", "Phone number should not contain symbols or special characters.");
+        return;
+    }
+
+    if (ui->lineEdit_tel->text().contains(" ")) {
+        QMessageBox::warning(this, "Invalid Phone Number", "Phone number should not contain spaces.");
+        return;
+    }
+    if (ui->lineEdit_tel->text().length() == 0) {
+        QMessageBox::warning(this, "Invalid Phone Number", "Phone Number should not be empty.");
+        return;
+    }
+    if (ui->lineEdit_tel->text().length() != 8) {
+        QMessageBox::warning(this, "Invalid Phone Number", "Phone number should be 8 digits.");
+        return;
+    }
+    if (cin == tel) {
+        QMessageBox::warning(this, "Input Error", "CIN and phone number should be different.");
+        return;
+    }
+
+    // Date validation
+    if (date_ord >= dateActuelle) {
+        QMessageBox::warning(this, "Invalid Date", "The prescription date must be earlier than the current date.");
+        return;
+    }
+
+    // Check if all fields are filled
+    if (nom.isEmpty() || prenom.isEmpty() || med.isEmpty() || statu.isEmpty() || ordStr.isEmpty()) {
+        QMessageBox::warning(this, "Input Error", "All fields must be filled.");
+        return;
+    }
+
+    int ord = ordStr.toInt();
+
+    // Proceed with the update if all validations pass
     ordonnance E(nom, prenom, statu, med, date_ord, cin, tel, ord);
 
     bool test = E.update(ord);
@@ -459,49 +533,20 @@ void MainWindow::on_update2Button_clicked()
         showStatistics();
         QMessageBox::information(nullptr, QObject::tr("Update Successful"),
                                  QObject::tr("The record has been successfully updated.\nClick Cancel to exit."),
-                                 QMessageBox::Cancel);messageShown = true;
+                                 QMessageBox::Cancel);
+        messageShown2 = true;
     } else {
         QMessageBox::critical(nullptr, QObject::tr("Update Failed"),
                               QObject::tr("Failed to update the record. Please ensure the record exists.\nClick Cancel to exit."),
-                              QMessageBox::Cancel);messageShown = true;
+                              QMessageBox::Cancel);
+        messageShown2 = true;
     }
 }
 
-/*MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-    ui->tableWidget_2->setModel(Etmp.afficher());
-}*/
-/*void MainWindow::on_aa33_clicked() {
-    QString inputCin = ui->lineEdit->text();  // Get CIN from lineEdit
 
-    // Access the model directly from the table view
-    QAbstractItemModel *model = ui->tableView_2->model();
 
-    if (!model) {
-        QMessageBox::critical(this, "Error", "No model found for tableView_2.");
-        return;
-    }
 
-    // Check if input is empty; if so, show all rows and return
-    if (inputCin.isEmpty()) {
-        for (int row = 0; row < model->rowCount(); ++row) {
-            ui->tableView_2->setRowHidden(row, false);  // Unhide all rows
-        }
-        return;
-    }
-
-    // Loop through each row and check the CIN value in column 2
-    for (int row = 0; row < model->rowCount(); ++row) {
-        QModelIndex index = model->index(row, 1);  // Column 2 (0-based index 1) for CIN values
-        QString cinValue = model->data(index).toString();
-
-        // Check if the CIN matches the input; hide the row if it doesn’t match
-        ui->tableView_2->setRowHidden(row, cinValue != inputCin);
-    }
-}*/
+//--------------------RECHERCHE----------------------------------------------------------------------------------
 
 void MainWindow::on_aa33_clicked() {
     QString inputCin = ui->lineEdit->text();  // Get CIN from lineEdit
@@ -566,10 +611,16 @@ void MainWindow::on_aa33_clicked() {
     }
 }
 
+
+//---------------------------------TRI---------------------------------------------------------------------------
+
+
+
+
 void MainWindow::on_aa44_clicked() {
     QString selectedValue = ui->comboBox4->currentText();  // Get the selected value from comboBox4
 
-    // Access the model directly from the table view
+    // Access the original model of the table view
     QAbstractItemModel *model = ui->tableView_2->model();
 
     if (!model) {
@@ -577,12 +628,19 @@ void MainWindow::on_aa44_clicked() {
         return;
     }
 
-    // Create a QSortFilterProxyModel for sorting
-    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
-    proxyModel->setSourceModel(model);
+    // Create or access a QSortFilterProxyModel
+    QSortFilterProxyModel *proxyModel = qobject_cast<QSortFilterProxyModel *>(ui->tableView_2->model());
+    if (!proxyModel) {
+        proxyModel = new QSortFilterProxyModel(this);
+        proxyModel->setSourceModel(model);
+        ui->tableView_2->setModel(proxyModel);
+    }
 
-    // Determine which column to sort based on the selected comboBox4 value
-    if (selectedValue == "STATUS") {
+    // Handle sorting based on the selected comboBox4 value
+    if (selectedValue == "DEFAULT") {
+        proxyModel->sort(-1);  // Reset sorting to the original order
+    }
+    else if (selectedValue == "STATUS") {
         proxyModel->sort(6, Qt::AscendingOrder);  // Sort column 7 (0-based index 6) alphabetically in ascending order
     }
     else if (selectedValue == "PRESCRIPTION DATE") {
@@ -591,9 +649,6 @@ void MainWindow::on_aa44_clicked() {
     else if (selectedValue == "MEDECINE") {
         proxyModel->sort(7, Qt::AscendingOrder);  // Sort column 8 (0-based index 7) alphabetically in ascending order
     }
-
-    // Set the proxy model to the table view
-    ui->tableView_2->setModel(proxyModel);
 }
 
 //----------------STATS----------------------------------------------------------
@@ -645,10 +700,6 @@ void MainWindow::showStatistics() {
         topCounts << sortedMedicines[i].second;
     }
 
-    // Debugging: Print the top 3 medicines and counts
-    qDebug() << "Top Medicines: " << topMedicines;
-    qDebug() << "Top Counts: " << topCounts;
-
     // Clear existing stats in frame66
     if (ui->frame66->layout() != nullptr) {
         QLayoutItem *child;
@@ -661,8 +712,17 @@ void MainWindow::showStatistics() {
 
     // Create the pie chart for "Prescriptions by Status"
     QPieSeries *statusSeries = new QPieSeries();
+    int totalStatus = 0;
     for (auto it = statusCount.begin(); it != statusCount.end(); ++it) {
         statusSeries->append(it.key(), it.value());
+        totalStatus += it.value();
+    }
+
+    // Show percentage labels for the pie chart
+    for (auto slice : statusSeries->slices()) {
+        double percentage = (slice->value() / totalStatus) * 100;
+        slice->setLabel(QString("%1 (%2%)").arg(slice->label()).arg(percentage, 0, 'f', 1));
+        slice->setLabelVisible(true);
     }
 
     QChart *statusChart = new QChart();
@@ -683,7 +743,7 @@ void MainWindow::showStatistics() {
 
     QChart *medicineChart = new QChart();
     medicineChart->addSeries(medicineSeries);
-    medicineChart->setTitle("Top 3 Medicines sold");
+    medicineChart->setTitle("Top 3 Medicines Sold");
     medicineChart->setAnimationOptions(QChart::SeriesAnimations);
 
     QBarCategoryAxis *axisX = new QBarCategoryAxis();
@@ -692,25 +752,267 @@ void MainWindow::showStatistics() {
     medicineSeries->attachAxis(axisX);
 
     QValueAxis *axisY = new QValueAxis();
-    axisY->setRange(0, topCounts.isEmpty() ? 0 : topCounts[0]);
+    axisY->setRange(0, topCounts.isEmpty() ? 0 : topCounts[0] + 5);  // Add padding for labels
     medicineChart->addAxis(axisY, Qt::AlignLeft);
     medicineSeries->attachAxis(axisY);
 
+
+
     QChartView *medicineChartView = new QChartView(medicineChart);
     medicineChartView->setRenderHint(QPainter::Antialiasing);
-
-    // Debugging: Verify that the charts are created
-    qDebug() << "Charts created: Pie chart and Bar chart.";
 
     // Add the charts to frame66's layout
     QHBoxLayout *statsLayout = new QHBoxLayout();
     statsLayout->addWidget(statusChartView);
     statsLayout->addWidget(medicineChartView);
-
     ui->frame66->setLayout(statsLayout);
-
-    // Debugging: Confirm the layout is set
-    qDebug() << "Layout set in frame66.";
 }
 
 
+#include <QFileDialog>
+#include <QPdfWriter>
+#include <QPainter>
+#include <QMessageBox>
+
+void MainWindow::on_aaa_2_clicked()
+{
+    QModelIndexList selectedIndexes = ui->tableView_2->selectionModel()->selectedIndexes();
+
+    // Check if any row is selected and ensure the first column (Prescription Number) is selected
+    if (!selectedIndexes.isEmpty() && selectedIndexes.first().column() == 0) {
+        int prescriptionNumber = selectedIndexes.first().data().toInt(); // Retrieve prescription number
+
+        // Retrieve the prescription data from the database
+        ordonnance E;
+        bool dataRetrieved = E.fetchData(prescriptionNumber);
+
+        if (dataRetrieved) {
+            // Open a file dialog for the user to choose where to save the PDF
+            QString fileName = QFileDialog::getSaveFileName(this, "Save Prescription as PDF",
+                                                            QString("Prescription_%1.pdf").arg(QString::number(E.getord())),
+                                                            "PDF Files (*.pdf)");
+
+            // Check if the user canceled the file dialog (fileName will be empty)
+            if (fileName.isEmpty()) {
+                return;  // Exit if no file was chosen
+            }
+
+            // Create the PDF file at the selected path
+            QPdfWriter writer(fileName);
+            writer.setPageSize(QPageSize::A4);  // Set the page size (A4)
+
+            QPainter painter(&writer);
+            painter.setFont(QFont("Arial", 12));  // Set the font size
+
+            // Draw the logo in the top-left corner
+            QImage logo("C:/Users/USER/Downloads/qtqt6.7/interface_qt/interface_qt/img/Nouveau dossier/logo.png");
+            if (!logo.isNull()) {
+                painter.drawImage(50, 50, logo.scaled(1000, 1000, Qt::KeepAspectRatio)); // Adjust size and position
+            } else {
+                QMessageBox::warning(this, "Logo Error", "Failed to load the logo image.");
+            }
+
+            // Title with underline
+            int pageWidth = writer.width();
+            QString title = "Prescription N° " + QString::number(E.getord());
+            QFont titleFont("Arial", 14, QFont::Bold);
+            titleFont.setUnderline(true);  // Add underline to the title
+            painter.setFont(titleFont);
+
+            // Calculate title position
+            int titleWidth = painter.fontMetrics().horizontalAdvance(title);  // Title width for centering
+            int titleXPos = (pageWidth - titleWidth) / 2;  // Center the title horizontally
+            int yPos = 200;  // Vertical position for the title
+
+            // Draw the title
+            painter.drawText(titleXPos, yPos, title);
+            yPos += 2 * 30;  // Add extra space after the title
+
+            // Reset font for the details
+            painter.setFont(QFont("Arial", 12));
+
+            // Increase lineHeight for better spacing between lines
+            int lineHeight = 300;
+
+            // Prescription Number (line 1)
+            yPos += lineHeight + 3000;
+            painter.drawText(50, yPos, "Prescription Number: " + QString::number(E.getord()));
+            yPos += lineHeight;
+
+            // ID Number (line 2)
+            painter.drawText(50, yPos, "ID Number: " + QString::number(E.getcin()));
+            yPos += lineHeight;
+
+            // Name (line 3)
+            painter.drawText(50, yPos, "Name: " + E.getprenom());
+            yPos += lineHeight;
+
+            // Last Name (line 4)
+            painter.drawText(50, yPos, "Last Name: " + E.getnom());
+            yPos += lineHeight;
+
+            // Phone Number (line 5)
+            painter.drawText(50, yPos, "Phone Number: " + QString::number(E.gettel()));
+            yPos += lineHeight;
+
+            // Medication (line 6)
+            painter.drawText(50, yPos, "Medication: " + E.getmed());
+            yPos += lineHeight;
+
+            // Date (line 7) - in dd/MM/yyyy format
+            painter.drawText(50, yPos, "Date: " + E.getdate_ord().toString("dd/MM/yyyy"));
+            yPos += lineHeight;
+
+            // Status (line 8)
+            painter.drawText(50, yPos, "Status: " + E.getstatu());
+            yPos += lineHeight;
+
+            // Finish the drawing
+            painter.end();
+
+            // Inform the user that the PDF has been created
+            QMessageBox::information(this, "PDF Created", "The prescription details have been saved to the PDF.");
+        } else {
+            QMessageBox::warning(this, "Error", "Failed to retrieve prescription data.");
+        }
+    } else {
+        QMessageBox::warning(this, "Selection Error", "Please select a valid prescription number in the first column.");
+    }
+}
+
+
+
+
+
+
+
+
+
+void MainWindow::generatePDFBill(const ordonnance &ord)
+{
+    QString filePath = QFileDialog::getSaveFileName(this, "Save PDF", "", "*.pdf");
+    if (filePath.isEmpty())
+        return;
+
+    QPdfWriter writer(filePath);
+    writer.setPageSize(QPageSize::A4);
+    QPainter painter(&writer);
+
+    int yPosition = 100;
+
+    painter.drawText(100, yPosition, "Prescription Bill");
+    yPosition += 40;
+
+    painter.drawText(100, yPosition, "Prescription Number: " + QString::number(ord.getord()));
+    yPosition += 20;
+    painter.drawText(100, yPosition, "Patient Name: " + ord.getnom());
+    yPosition += 20;
+    painter.drawText(100, yPosition, "Patient Last Name: " + ord.getprenom());
+    yPosition += 20;
+    painter.drawText(100, yPosition, "CIN: " + QString::number(ord.getcin()));
+    yPosition += 20;
+    painter.drawText(100, yPosition, "Telephone: " + QString::number(ord.gettel()));
+    yPosition += 20;
+    painter.drawText(100, yPosition, "Medicine: " + ord.getmed());
+    yPosition += 20;
+    painter.drawText(100, yPosition, "Status: " + ord.getstatu());
+    yPosition += 20;
+    painter.drawText(100, yPosition, "Date of Prescription: " + ord.getdate_ord().toString("dd/MM/yyyy"));
+
+    painter.end();
+
+    QMessageBox::information(this, "PDF Export", "PDF generated and saved successfully.");
+}
+
+
+
+// MainWindow.cpp
+/*void MainWindow::on_pwhatsapp_clicked()
+{
+    QMessageBox::information(this, "Clicked", "Button Clicked!"); // Debugging message box
+    OpenAIImageGenerator *imageWindow = new OpenAIImageGenerator(this);
+    imageWindow->show();
+}*/
+
+
+void MainWindow::on_pwhatsapp_2_clicked()
+{
+
+    stackedWidget->setCurrentIndex(12);
+    ui->quickWidget_MapView->setSource(QUrl(QStringLiteral("qrc:/map.qml")));
+    ui->quickWidget_MapView->show();
+
+     auto Obje =  ui->quickWidget_MapView->rootObject();
+
+
+    connect(this,SIGNAL(setCenterPosition(QVariant, QVariant)),Obje,SLOT(setCenterPosition(QVariant, QVariant)));
+    connect(this,SIGNAL(setLocationMarking(QVariant, QVariant)),Obje,SLOT(setLocationMarking(QVariant, QVariant)));
+
+    emit setCenterPosition(36.898765,10.189379);
+    emit setLocationMarking(36.898765,10.189379);
+
+}
+void MainWindow::on_chatbot_clicked()
+{
+       stackedWidget->setCurrentIndex(13);
+}
+void MainWindow::sendRequest()
+{
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QUrl url("https://open-ai21.p.rapidapi.com/conversationgpt35");
+
+    QJsonObject payload;
+    QJsonArray messages;
+    QJsonObject message;
+    message["role"] = "user";
+    message["content"] = ui->Question->text();
+    messages.append(message);
+    payload["messages"] = messages;
+    payload["web_access"] = false;
+    payload["system_prompt"] = "";
+    payload["temperature"] = 0.9;
+    payload["top_k"] = 5;
+    payload["top_p"] = 0.9;
+    payload["max_tokens"] = 256;
+    QJsonDocument doc(payload);
+    QByteArray postData = doc.toJson();
+
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setRawHeader("X-RapidAPI-Key", "api_key");
+    request.setRawHeader("X-RapidAPI-Host", "api_key");
+
+    QNetworkReply *reply = manager->post(request, postData);
+    connect(reply, &QNetworkReply::finished, [=]() {
+        if (reply->error() == QNetworkReply::NoError)
+        {
+            QByteArray responseData = reply->readAll();
+            qDebug() << responseData;
+
+            QJsonDocument responseDoc = QJsonDocument::fromJson(responseData);
+            QJsonObject responseObject = responseDoc.object();
+
+            QString resultMessage = responseObject["result"].toString();
+            QStringList words = resultMessage.split(' ');
+            QString formattedMessage;
+            int wordCount = 0;
+            for (const QString &word : words) {
+                formattedMessage += word + " ";
+                wordCount++;
+                if (wordCount == 10) {
+                    formattedMessage += "\n";
+                    wordCount = 0;
+                }
+            }
+
+            ui->Reply->setText(formattedMessage.trimmed());
+            ui->Question->clear();
+        }
+        else
+        {
+            qDebug() << "Error:" << reply->errorString();
+            QMessageBox::critical(this, "Error", "Failed to send request: " + reply->errorString());
+        }
+        reply->deleteLater();
+    });
+}

@@ -6,10 +6,14 @@
 #include <QMessageBox>
 #include <QApplication>
 #include <QMap>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    // Set the application icon
+    a.setWindowIcon(QIcon("C:/projetcpp/interface_qt/img/Nouveau dossier/logo1.ico")); // Use the correct prefix and file name
 
 
     Connection c;

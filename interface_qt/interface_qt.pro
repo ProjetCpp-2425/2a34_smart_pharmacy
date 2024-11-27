@@ -1,8 +1,10 @@
-QT       += core gui charts\
+QT   += core gui charts
     quick
-QT       += core gui sql
+QT       += core gui sql printsupport network
 QT += sql
-
+QT += widgets quickwidgets
+QT += core gui network quick positioning location
+QT += network #weather
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,15 +18,18 @@ SOURCES += \
     connection.cpp \
     main.cpp \
     mainwindow.cpp \
-    ordonnance.cpp
+    ordonnance.cpp \
+    whatsapp.cpp
 
 HEADERS += \
     connection.h \
     mainwindow.h \
-    ordonnance.h
+    ordonnance.h \
+    whatsapp.h
 
 FORMS += \
     mainwindow.ui
+    OpenAIImageGenerator.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

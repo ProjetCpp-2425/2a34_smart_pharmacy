@@ -115,9 +115,9 @@ bool ordonnance::fetchData(int id) {
         nom = query.value("NOM").toString();
         ord = query.value("NUMERO_ORDONNANCE").toInt();
         prenom = query.value("PRENOM").toString();
-        statu = query.value("STATU").toString();
+        statu = query.value("STATUS").toString();
         med = query.value("MEDICAMMENT").toString();
-        date_ord = query.value("DATE_ORD").toDate();
+        date_ord = query.value("DATE_ORDONNANCE").toDate();
         cin = query.value("CIN").toInt();
         tel = query.value("NUMERO_TELEPHONE").toInt();
 
@@ -126,63 +126,13 @@ bool ordonnance::fetchData(int id) {
         return false;  // No record found
     }
 }
-/*bool ordonnance::update(int) {
-    QSqlQuery query;
-
-    query.prepare("UPDATE ORDONNANCE SET NOM = :NOM, PRENOM = :PRENOM, STATUS = :STATU, "
-                  "MEDICAMMENT = :MED, DATE_ORDONNANCE = :DATE_ORD, CIN = :CIN, NUMERO_TELEPHONE = :TEL WHERE NUMERO_ORDONNANCE = :NUMERO_ORDONNANCE");
-
-    query.bindValue(":NOM", nom);
-    query.bindValue(":PRENOM", prenom);
-    query.bindValue(":STATU", statu);
-    query.bindValue(":MED", med);
-    query.bindValue(":DATE_ORD", date_ord);
-    query.bindValue(":CIN", cin);
-    query.bindValue(":TEL", tel);
-    query.bindValue(":NUMERO_ORDONNANCE", ord);
-
-    return query.exec();  // Returns true if the update was successful, false otherwise
-}*/
 
 
-/*bool ordonnance::update(int ord) {
-    QSqlQuery query;
+//-------------------------------UPDATE--------------------------------------------------------------------------------
 
-    // Check if the record exists
-    query.prepare("SELECT COUNT(*) FROM ORDONNANCE WHERE NUMERO_ORDONNANCE = :ord");
-    query.bindValue(":ord", ord);
-    if (!query.exec() || !query.next() || query.value(0).toInt() == 0) {
-        return false;  // Record doesn't exist
-    }
-
-    // Prepare the update query
-    query.prepare("UPDATE ORDONNANCE SET NOM = :nom, PRENOM = :prenom, STATUS = :statu, "
-                  "MEDICAMMENT = :med, DATE_ORDONNANCE = :dateOrd, CIN = :cin,  NUMERO_TELEPHONE = :tel "
-                  "WHERE NUMERO_ORDONNANCE = :ord");
-    query.bindValue(":nom", nom);
-    query.bindValue(":prenom", prenom);
-    query.bindValue(":statu", statu);
-    query.bindValue(":med", med);
-    query.bindValue(":dateOrd", date_ord);  // Assuming date_ord is QDate in the ordonnance class
-    query.bindValue(":cin", cin);
-    query.bindValue(":tel", tel);
-
-    return query.exec();
-}*/
 
 bool ordonnance::update(int ord)
 {
-    /*QSqlQuery query;
-        query.prepare("SELECT 1 FROM ORDONNANCE WHERE NUMERO_ORDONNANCE = :NUMERO_ORDONNANCE");
-        query.bindValue(":NUMERO_ORDONNANCE", ord);
-
-        if (query.exec() && query.next()) {
-            // Record exists if query returns at least one row
-            return true;
-        } else {
-            // No record found
-            return false;
-        }*/
     QSqlQuery query;
 
     // Prepare the SQL statement with individual column updates and a WHERE clause
@@ -209,5 +159,24 @@ bool ordonnance::update(int ord)
     return true; // Return true if the update was successful
 }
 
+bool ordonnance::retrieveDataByPrescriptionNumber(int prescriptionNumber)
+{
+    QSqlQuery query;
+    query.prepare("SELECT * FROM ORDONNANCE WHERE NUMERO_ORDONNANCE = :NUMERO_ORDONNANCE");
+    query.bindValue(":UMERO_ORDONNANCE", prescriptionNumber);
 
+    if (query.exec() && query.next()) {
+        // Assuming columns: prescription_number, nom, prenom, cin, tel, med, status, date_ord
+        this->ord = query.value(0).toInt();
+        this->nom = query.value(1).toString();
+        this->prenom = query.value(2).toString();
+        this->cin = query.value(3).toInt();
+        this->tel = query.value(4).toInt();
+        this->med = query.value(5).toString();
+        this->statu = query.value(6).toString();
+        this->date_ord = query.value(7).toDate();
+        return true;
+    }
+    return false;
+}
 

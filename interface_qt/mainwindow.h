@@ -5,6 +5,16 @@
 #include <QSortFilterProxyModel>
 #include <QMainWindow>
 #include <QMap>
+#include<QVariant>
+#include<QtCore>
+#include<QtGui>
+#include<QtQuick>
+#include <QMainWindow>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 #include <QFrame>
 
@@ -32,7 +42,6 @@ private:
     QSortFilterProxyModel *proxyModel;
 
 
-
 private slots:
     void on_pushButton_8_clicked();
     void on_pushButton_10_clicked(); // For salary button*
@@ -52,9 +61,21 @@ private slots:
     void on_aa33_clicked();
     void on_aa44_clicked();
     void showStatistics();
+    void on_aaa_2_clicked();
+    void generatePDFBill(const ordonnance &ord);
+    void on_pwhatsapp_clicked();
+
+    void on_pwhatsapp_2_clicked();
+    void sendRequest();
+    void on_chatbot_clicked();
 
 private:
     QStackedWidget *stackedWidget;
+
+signals:
+    void setCenterPosition(QVariant,QVariant);
+    void setLocationMarking(QVariant,QVariant);
+
 
 };
 
