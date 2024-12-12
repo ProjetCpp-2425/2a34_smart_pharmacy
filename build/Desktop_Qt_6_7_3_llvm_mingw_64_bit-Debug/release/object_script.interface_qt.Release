@@ -1,0 +1,13 @@
+release/arduino_ha.o
+release/connection.o
+release/historique.o
+release/main.o
+release/mainwindow.o
+release/notification.o
+release/ordonnance.o
+release/staff.o
+release/stock.o
+release/transactions.o
+release/qrc_resource.o
+release/moc_arduino_ha.o
+release/moc_mainwindow.o

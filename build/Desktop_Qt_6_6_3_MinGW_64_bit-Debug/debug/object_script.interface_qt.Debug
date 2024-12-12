@@ -1,0 +1,13 @@
+debug/arduino_ha.o
+debug/connection.o
+debug/historique.o
+debug/main.o
+debug/mainwindow.o
+debug/notification.o
+debug/ordonnance.o
+debug/staff.o
+debug/stock.o
+debug/transactions.o
+debug/qrc_resource.o
+debug/moc_arduino_ha.o
+debug/moc_mainwindow.o
