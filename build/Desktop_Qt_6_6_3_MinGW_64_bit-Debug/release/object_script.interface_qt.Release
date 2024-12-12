@@ -1,0 +1,11 @@
+release/arduino_ha.o
+release/commande.o
+release/connection.o
+release/main.o
+release/mainwindow.o
+release/ordonnance.o
+release/staff.o
+release/transactions.o
+release/usermanager.o
+release/qrc_resource.o
+release/moc_mainwindow.o
